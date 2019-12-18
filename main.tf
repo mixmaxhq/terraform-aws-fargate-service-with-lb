@@ -1,0 +1,145 @@
+module "fargate_service" {
+  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v0.1.0" # change me later
+
+  name = var.name
+  environment = var.environment
+  image = var.image
+  is_public = var.is_public
+  cpu = var.cpu
+  memory = var.memory
+
+  environment_vars = var.environment_vars
+  secrets = var.secrets
+  container_ports = var.container_ports
+  custom_tags = var.custom_tags
+  load_balancer_config = [
+    for port in var.container_ports: 
+      {
+        target_group_arn = module.alb.target_group_arns[0]
+        container_name = local.env_name
+        container_port = port
+      }
+  ]
+}
+
+## Allow loadbalancer inbound to task on port 80
+resource "aws_security_group_rule" "task_inbound_80" {
+  security_group_id = module.fargate_service.task_sg_id
+
+  type      = "ingress"
+  from_port = 80
+  to_port   = 80
+  protocol  = "tcp"
+
+  source_security_group_id = aws_security_group.lb.id
+}
+
+## Load Balancer Security Group
+resource "aws_security_group" "lb" {
+  name        = "${local.env_name}-lb-sg"
+  description = "Security group for ${local.env_name}-lb"
+  vpc_id      = local.vpc_id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group_rule" "public_load_balancer_80_rule" {
+  count             = var.is_public ? 1 : 0
+  security_group_id = aws_security_group.lb.id
+
+  type        = "ingress"
+  from_port   = 80
+  to_port     = 80
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "public_load_balancer_443_rule" {
+  count             = var.is_public ? 1 : 0
+  security_group_id = aws_security_group.lb.id
+
+  type        = "ingress"
+  from_port   = 443
+  to_port     = 443
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "load_balancer_80_rule_for_sgs" {
+  count             = length(local.lb_allowed_sgs)
+  security_group_id = aws_security_group.lb.id
+
+  type      = "ingress"
+  from_port = 80
+  to_port   = 80
+  protocol  = "tcp"
+
+  source_security_group_id = local.lb_allowed_sgs[count.index]
+}
+
+resource "aws_security_group_rule" "load_balancer_443_rule_for_sgs" {
+  count             = length(local.lb_allowed_sgs)
+  security_group_id = aws_security_group.lb.id
+
+  type      = "ingress"
+  from_port = 443
+  to_port   = 443
+  protocol  = "tcp"
+
+  source_security_group_id = local.lb_allowed_sgs[count.index]
+}
+
+module "alb" {
+  source  = "terraform-aws-modules/alb/aws"
+  version = "~> v5.0"
+
+  name = "${local.env_name}-lb"
+
+  load_balancer_type = "application"
+
+  vpc_id          = local.vpc_id
+  subnets         = local.lb_subnets
+  security_groups = [aws_security_group.lb.id]
+  internal        = var.is_public ? false : true
+
+  target_groups = [
+    {
+      name             = local.env_name
+      backend_protocol = "HTTP"
+      backend_port     = 80
+      target_type      = "ip"
+    }
+  ]
+
+  https_listeners = [
+    {
+      port               = 443
+      protocol           = "HTTPS"
+      certificate_arn    = local.cert_arn
+      target_group_index = 0
+    }
+  ]
+
+  tags = local.tags
+}
+
+resource "aws_lb_listener" "redirect_http_to_https" {
+  load_balancer_arn = module.alb.this_lb_arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
