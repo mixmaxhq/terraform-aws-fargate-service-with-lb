@@ -63,7 +63,7 @@ variable "secrets" {
 
 variable "container_ports" {
   description = "A list of ports the container listens on. Default is port 80"
-  type = list(number)
+  type        = list(number)
   default     = [80]
 }
 

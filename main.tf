@@ -1,24 +1,24 @@
 module "fargate_service" {
   source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v0.1.0" # change me later
 
-  name = var.name
+  name        = var.name
   environment = var.environment
-  image = var.image
-  is_public = var.is_public
-  cpu = var.cpu
-  memory = var.memory
+  image       = var.image
+  is_public   = var.is_public
+  cpu         = var.cpu
+  memory      = var.memory
 
   environment_vars = var.environment_vars
-  secrets = var.secrets
-  container_ports = var.container_ports
-  custom_tags = var.custom_tags
+  secrets          = var.secrets
+  container_ports  = var.container_ports
+  custom_tags      = var.custom_tags
   load_balancer_config = [
-    for port in var.container_ports: 
-      {
-        target_group_arn = module.alb.target_group_arns[0]
-        container_name = local.env_name
-        container_port = port
-      }
+    for port in var.container_ports :
+    {
+      target_group_arn = module.alb.target_group_arns[0]
+      container_name   = local.env_name
+      container_port   = port
+    }
   ]
 }
 
