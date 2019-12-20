@@ -1,8 +1,8 @@
 # `terraform-aws-fargate-service-with-lb`
 
-This module is an opinionated implementation of a Fargate service with a load balancer. This is useful for creating an API or web service.
+This module is an opinionated implementation of a Fargate service with an application load balancer. This is useful for creating an API or web service.
 
-For creating a Fargate service without a built-in application load balancer, see the [terraform-aws-fargate-service module](https://github.com/mixmaxhq/terraform-aws-fargate-service).
+For creating a Fargate service without a built-in application load balancer, see the [terraform-aws-fargate-service module](https://github.com/mixmaxhq/terraform-aws-fargate-service). This is also useful when deploying an application behind a Network Load Balancer.
 
 ## Usage
 
@@ -79,6 +79,17 @@ n/a</td>
 <td>no</td>
 </tr>
 <tr>
+<td>health_check_path</td>
+<td>The path the LB will GET to determine if a host is healthy. For example, /health-check  or /status. This health check should only validate that the app itself is online, not necessarily that any downstream dependent services are also online.</td>
+<td>
+
+`string`</td>
+<td>
+
+`"/"`</td>
+<td>no</td>
+</tr>
+<tr>
 <td>image</td>
 <td>The image to launch. This is passed directly to the Docker engine. An example is 012345678910.dkr.ecr.us-east-1.amazonaws.com/hello-world:latest</td>
 <td>
@@ -120,17 +131,6 @@ n/a</td>
 <td>
 
 `[]`</td>
-<td>no</td>
-</tr>
-<tr>
-<td>load_balancer_type</td>
-<td>A string of the load balancer type. Valid values are `application` and `network`.</td>
-<td>
-
-`string`</td>
-<td>
-
-`"application"`</td>
 <td>no</td>
 </tr>
 <tr>

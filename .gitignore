@@ -1,3 +1,6 @@
+# vi users unite
+*.swp
+
 #  Local .terraform directories
 **/.terraform/*
 

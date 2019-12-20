@@ -1,6 +1,6 @@
 locals {
   environment = "staging"
-  app_name    = "rjt-test-terraform"
+  app_name    = "module-test"
   image       = "nginxdemos/hello"
 }
 
