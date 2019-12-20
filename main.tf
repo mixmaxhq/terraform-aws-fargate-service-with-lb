@@ -1,5 +1,5 @@
 module "fargate_service" {
-  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v0.1.0" # change me later
+  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v0.3.0"
 
   name        = var.name
   environment = var.environment
@@ -46,6 +46,8 @@ resource "aws_security_group" "lb" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = merge(local.tags, { "Name" : "${local.env_name}-lb-sg" })
 }
 
 resource "aws_security_group_rule" "public_load_balancer_80_rule" {
@@ -113,6 +115,11 @@ module "alb" {
       backend_protocol = "HTTP"
       backend_port     = 80
       target_type      = "ip"
+
+      health_check = {
+        path    = var.health_check_path
+        matcher = "200-299" # the HTTP status codes from the health check endpoint to consider "healthy"
+      }
     }
   ]
 

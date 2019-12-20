@@ -31,12 +31,6 @@ variable "lb_allowed_sgs" {
   default     = []
 }
 
-variable "load_balancer_type" {
-  description = "A string of the load balancer type. Valid values are `application` and `network`."
-  type        = string
-  default     = "application"
-}
-
 variable "cpu" {
   description = "The CPU credits to provide container. 256 is .25 vCPUs, 1024 is 1 vCPU, max is 4096 (4 vCPUs). Find valid values here: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html"
   type        = number
@@ -71,4 +65,10 @@ variable "custom_tags" {
   description = "A mapping of custom tags to add to the generated resources."
   type        = map(string)
   default     = {}
+}
+
+variable "health_check_path" {
+  description = "The path the LB will GET to determine if a host is healthy. For example, /health-check  or /status. This health check should only validate that the app itself is online, not necessarily that any downstream dependent services are also online."
+  type        = string
+  default     = "/"
 }

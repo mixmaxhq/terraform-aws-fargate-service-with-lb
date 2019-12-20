@@ -12,7 +12,6 @@ locals {
   lb_subnets      = var.is_public ? local.public_subnets : local.private_subnets
   lb_allowed_sgs  = concat([module.global_constants.bastion_sg_id[var.environment]], var.lb_allowed_sgs)
   cert_arn        = module.global_constants.wildcard_cert_arn[var.environment]
-  ecs_cluster     = "arn:aws:ecs:${local.aws_region}:${local.aws_account_id}:cluster/default" # change me later
   default_tags = {
     "Environment" : var.environment
     "App name" : var.name
