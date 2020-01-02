@@ -1,5 +1,5 @@
 module "fargate_service" {
-  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v0.3.0"
+  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v0.4.0"
 
   name        = var.name
   environment = var.environment
@@ -12,6 +12,7 @@ module "fargate_service" {
   secrets          = var.secrets
   container_ports  = var.container_ports
   custom_tags      = var.custom_tags
+  task_command     = var.task_command
   load_balancer_config = [
     for port in var.container_ports :
     {
@@ -22,13 +23,14 @@ module "fargate_service" {
   ]
 }
 
-## Allow loadbalancer inbound to task on port 80
-resource "aws_security_group_rule" "task_inbound_80" {
+## Allow loadbalancer inbound to task on container port(s)
+resource "aws_security_group_rule" "task_inbound" {
+  count             = length(var.container_ports)
   security_group_id = module.fargate_service.task_sg_id
 
   type      = "ingress"
-  from_port = 80
-  to_port   = 80
+  from_port = var.container_ports[count.index]
+  to_port   = var.container_ports[count.index]
   protocol  = "tcp"
 
   source_security_group_id = aws_security_group.lb.id
@@ -110,10 +112,11 @@ module "alb" {
   internal        = var.is_public ? false : true
 
   target_groups = [
+    for port in var.container_ports :
     {
-      name             = local.env_name
+      name             = "${local.env_name}-${port}"
       backend_protocol = "HTTP"
-      backend_port     = 80
+      backend_port     = port
       target_type      = "ip"
 
       health_check = {
