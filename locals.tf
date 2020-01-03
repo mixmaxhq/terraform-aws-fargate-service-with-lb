@@ -1,5 +1,5 @@
 module "global_constants" {
-  source = "git::ssh://git@github.com/mixmaxhq/terraform-global-constants.git?ref=v1.2.1"
+  source = "git::ssh://git@github.com/mixmaxhq/terraform-global-constants.git?ref=v1.3.0"
 }
 
 locals {
@@ -10,7 +10,9 @@ locals {
   private_subnets = module.global_constants.private_subnets[var.environment]
   public_subnets  = module.global_constants.public_subnets[var.environment]
   lb_subnets      = var.is_public ? local.public_subnets : local.private_subnets
-  lb_allowed_sgs  = concat([module.global_constants.bastion_sg_id[var.environment]], var.lb_allowed_sgs)
+  bastion_sg_id   = module.global_constants.bastion_sg_id[var.environment]
+  vpn_sg_id       = module.global_constants.vpn_sg_id[var.environment]
+  lb_allowed_sgs  = concat([local.bastion_sg_id, local.vpn_sg_id], var.lb_allowed_sgs)
   cert_arn        = module.global_constants.wildcard_cert_arn[var.environment]
   default_tags = {
     "Environment" : var.environment
