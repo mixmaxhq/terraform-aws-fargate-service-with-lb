@@ -1,5 +1,5 @@
 module "fargate_service" {
-  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v0.4.0"
+  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v0.4.1"
 
   name        = var.name
   environment = var.environment
@@ -21,6 +21,14 @@ module "fargate_service" {
       container_port   = port
     }
   ]
+  log_config = {
+    "logDriver" : "awslogs",
+    "options" : {
+      "awslogs-group" : "/aws/fargate/${var.environment}",
+      "awslogs-stream-prefix" : var.name,
+      "awslogs-region" : local.aws_region
+    }
+  }
 }
 
 ## Allow loadbalancer inbound to task on container port(s)
