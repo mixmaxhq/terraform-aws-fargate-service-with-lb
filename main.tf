@@ -107,8 +107,7 @@ resource "aws_security_group_rule" "load_balancer_443_rule_for_sgs" {
 }
 
 module "alb" {
-  source  = "terraform-aws-modules/alb/aws"
-  version = "~> v5.0"
+  source = "git::ssh://git@github.com/terraform-aws-modules/terraform-aws-alb.git?ref=v5.0.0"
 
   name = "${local.env_name}-lb"
 
