@@ -1,3 +1,9 @@
+module "cloudwatch_log_group" {
+  source      = "git::ssh://git@github.com/mixmaxhq/terraform-aws-cloudwatch-log-group?ref=v1.1.0"
+  name        = "/aws/fargate/${var.environment}/${var.name}"
+  environment = var.environment
+}
+
 module "fargate_service" {
   source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v0.4.1"
 
@@ -24,7 +30,7 @@ module "fargate_service" {
   log_config = {
     "logDriver" : "awslogs",
     "options" : {
-      "awslogs-group" : "/aws/fargate/${var.environment}",
+      "awslogs-group" : module.cloudwatch_log_group.log_group_name,
       "awslogs-stream-prefix" : var.name,
       "awslogs-region" : local.aws_region
     }
