@@ -127,10 +127,11 @@ module "alb" {
   target_groups = [
     for port in var.container_ports :
     {
-      name             = "${local.env_name}-${port}"
-      backend_protocol = "HTTP"
-      backend_port     = port
-      target_type      = "ip"
+      name                 = "${local.env_name}-${port}"
+      backend_protocol     = "HTTP"
+      backend_port         = port
+      target_type          = "ip"
+      deregistration_delay = 60
 
       health_check = {
         path    = var.health_check_path
