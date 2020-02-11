@@ -27,7 +27,7 @@ Error: InvalidParameterException: The container module-test-staging does not exi
   28: resource "aws_ecs_service" "service" {
 ```
 
-This is due to this module making some assumptions about the name of the container to [connect networking for the load balancer](https://github.com/mixmaxhq/terraform-aws-fargate-service-with-lb/blob/master/main.tf#L26). The default is set to `${var.name}-${var.environment}` when deploying a task definition using the `mixmax` CLI. However, you can override this behavior. Find the `name` value in your task definition's [container definition](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html#container_definition_name), and set the `container_name_override` parameter to this module for overriding the name used.
+This is due to this module making some assumptions about the name of the container to [connect networking for the load balancer](https://github.com/mixmaxhq/terraform-aws-fargate-service-with-lb/blob/master/main.tf#L14). The default is set to `${var.name}-${var.environment}` when deploying a task definition using the `mixmax` CLI. However, you can override this behavior. Find the `name` value in your task definition's [container definition](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html#container_definition_name), and set the `container_name_override` parameter to this module for overriding the name used.
 
 ## How are the docs generated?
 
