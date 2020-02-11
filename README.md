@@ -12,170 +12,167 @@ An example deployable application can be found in the [examples/simple](examples
 
 ## Notes
 
-This module creates security groups (ie firewalls) for communicating with both the load balancer, and the service over the network. By default, it allows all traffic originating from the container (in other words, all `egress` traffic is allowed), and inbound traffic from the load balancer to the container on port 80 (or whatever `container_ports` is set to.) However, if you would like to communicate inbound to the container from another service, you must create an [`aws_security_group_rule`](https://www.terraform.io/docs/providers/aws/r/security_group_rule.html) resource referencing the load balancer's security group. The module-created security group is available as the output `lb_sg_id`.
+This module creates security groups (ie firewalls) for communicating with both the load balancer, and the service over the network. By default, it allows all traffic originating from the container (in other words, all `egress` traffic is allowed), and inbound traffic from the load balancer to the container on port 80 (or whatever `container_ports` is set to.) However, if you would like to communicate inbound to the load balancer from another service, you must create an [`aws_security_group_rule`](https://www.terraform.io/docs/providers/aws/r/security_group_rule.html) resource referencing the load balancer's security group. The module-created security group is available as the output `lb_sg_id`.
 
 Additionally, this module creates an IAM role for the Fargate service to authorize access to AWS resources. By default, these services get no permissions. To add permissions to an AWS resource, create an [`aws_iam_policy` resource](https://www.terraform.io/docs/providers/aws/r/iam_policy.html) and [attach the policy to the role using an `aws_iam_role_policy_attachment` resource](https://www.terraform.io/docs/providers/aws/r/iam_role_policy_attachment.html). The module-created IAM role name is available as the output `task_role_name` from the module.
 
+## Gotchas
+
+### Container does not exist in the task definition
+If you get an error like below,
+```
+Error: InvalidParameterException: The container module-test-staging does not exist in the task definition.
+        status code: 400, request id: a1c206cc-c593-455c-8ac2-b198956e9447 "module-test-staging"
+  on .terraform/modules/web.fargate_service/main.tf line 28, in resource "aws_ecs_service" "service":
+  28: resource "aws_ecs_service" "service" {
+```
+
+This is due to this module making some assumptions about the name of the container to [connect networking for the load balancer](https://github.com/mixmaxhq/terraform-aws-fargate-service-with-lb/blob/master/main.tf#L14). The default is set to `${var.name}-${var.environment}` when deploying a task definition using the `mixmax` CLI. However, you can override this behavior. Find the `name` value in your task definition's [container definition](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html#container_definition_name), and set the `container_name_override` parameter to this module for overriding the name used.
+
+## How are the docs generated?
+
+Manually with [`terraform-docs`](https://github.com/segmentio/terraform-docs), something like this:
+```
+terraform-docs md document . >> README.md
+# and then edit out the old stuff
+```
+
 ## Variables
 
-<table>
-<tr><th>Name</th><th>Description</th><th>Type</th><th>Default</th> <th>Required</th></tr>
-<tr>
-<td>container_ports</td>
-<td>A list of ports the container listens on. Default is port 80</td>
-<td>
+### Required Variables
 
-`list(number)`</td>
-<td>
+The following variables are required:
 
+#### environment
+
+Description: The environment to deploy into. Some valid values are production, staging, engineering.
+
+Type:
+`string`
+
+#### name
+
+Description: The name of the application to launch
+
+Type:
+`string`
+
+#### service
+
+Description: The name of the service this application is associated with, ie 'send' if the application is 'send-worker'
+
+Type:
+`string`
+
+### Optional Variables
+
+The following variables are optional (have default values):
+
+#### container\_name\_override
+
+Description: The container name is used for networking the target group to the container instances; set this field to override the container name
+
+Type:
+`string`
+
+Default:
+`""`
+
+#### container\_ports
+
+Description: A list of ports the container listens on. Default is port 80
+
+Type:
+`list(number)`
+
+Default:
 ```json
 [
   80
 ]
 ```
-</td>
-<td>no</td>
-</tr>
-<tr>
-<td>cpu</td>
-<td>The CPU credits to provide container. 256 is .25 vCPUs, 1024 is 1 vCPU, max is 4096 (4 vCPUs). Find valid values here: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html</td>
-<td>
 
-`number`</td>
-<td>
+#### custom\_tags
 
-`512`</td>
-<td>no</td>
-</tr>
-<tr>
-<td>custom_tags</td>
-<td>A mapping of custom tags to add to the generated resources.</td>
-<td>
+Description: A mapping of custom tags to add to the generated resources.
 
-`map(string)`</td>
-<td>
+Type:
+`map(string)`
 
-`{}`</td>
-<td>no</td>
-</tr>
-<tr>
-<td>environment</td>
-<td>The environment to deploy into. Some valid values are production, staging, engineering.</td>
-<td>
+Default:
+`{}`
 
-`string`</td>
-<td>
+#### health\_check\_path
 
-n/a</td>
-<td>yes</td>
-</tr>
-<tr>
-<td>environment_vars</td>
-<td>A list of maps of environment variables to provide to the container. Do not put secrets here; instead use the `secrets` input to specify the ARN of a Parameter Store or Secrets Manager value.</td>
-<td>
+Description: The path the LB will GET to determine if a host is healthy. For example, /health-check  or /status. This health check should only validate that the app itself is online, not necessarily that any downstream dependent services are also online.
 
-`list(map(string))`</td>
-<td>
+Type:
+`string`
 
-`[]`</td>
-<td>no</td>
-</tr>
-<tr>
-<td>health_check_path</td>
-<td>The path the LB will GET to determine if a host is healthy. For example, /health-check  or /status. This health check should only validate that the app itself is online, not necessarily that any downstream dependent services are also online.</td>
-<td>
+Default:
+`"/"`
 
-`string`</td>
-<td>
+#### is\_public
 
-`"/"`</td>
-<td>no</td>
-</tr>
-<tr>
-<td>image</td>
-<td>The image to launch. This is passed directly to the Docker engine. An example is 012345678910.dkr.ecr.us-east-1.amazonaws.com/hello-world:latest</td>
-<td>
+Description: A boolean describing if the service is public or internal only.
 
-`string`</td>
-<td>
+Type:
+`bool`
 
-n/a</td>
-<td>yes</td>
-</tr>
-<tr>
-<td>is_public</td>
-<td>A boolean describing if the service is public or internal only.</td>
-<td>
+Default:
+`false`
 
-`bool`</td>
-<td>
+#### lb\_allowed\_cidrs
 
-`false`</td>
-<td>no</td>
-</tr>
-<tr>
-<td>lb_allowed_cidrs</td>
-<td>A list of strings of CIDRs to allow inbound to the load balancer</td>
-<td>
+Description: A list of strings of CIDRs to allow inbound to the load balancer
 
-`list(string)`</td>
-<td>
+Type:
+`list(string)`
 
-`[]`</td>
-<td>no</td>
-</tr>
-<tr>
-<td>lb_allowed_sgs</td>
-<td>A list of strings of Security Group IDs to allow inbound to the load balancer. The bastion is allowed by default.</td>
-<td>
+Default:
+`[]`
 
-`list(string)`</td>
-<td>
+#### lb\_allowed\_sgs
 
-`[]`</td>
-<td>no</td>
-</tr>
-<tr>
-<td>memory</td>
-<td>The memory to provide the container in MiB. 512 is min, 30720 is max. Find valid values here: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html</td>
-<td>
+Description: A list of strings of Security Group IDs to allow inbound to the load balancer. The bastion is allowed by default.
 
-`number`</td>
-<td>
+Type:
+`list(string)`
 
-`1024`</td>
-<td>no</td>
-</tr>
-<tr>
-<td>name</td>
-<td>The name of the service to launch</td>
-<td>
+Default:
+`[]`
 
-`string`</td>
-<td>
+#### task\_definition
 
-n/a</td>
-<td>yes</td>
-</tr>
-<tr>
-<td>secrets</td>
-<td>A list of maps of ARNs of secrets stored in Parameter Store or Secrets Manager and exposed as environment variables. Do not put actual secrets here! See examples/simple for usage.</td>
-<td>
+Description: The task definition family:revision or full ARN to deploy on first run to the Fargate service. If you are deploying software with Jenkins, you can ignore this; this is used with task definitions that are managed in Terraform. If unset, the first run will use an Nginx 'hello-world' task def. Terraform will not update the task definition in the service if this value has changed.
 
-`list(string)`</td>
-<td>
+Type:
+`string`
 
-`[]`</td>
-<td>no</td>
-</tr>
-</table>
+Default:
+`""`
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| alb\_dns\_name | The DNS name of the created ALB. Useful for creating a CNAME from mixmax.com DNS names. |
-| lb\_sg\_id | The ID of the Security Group attached to the LB |
-| task\_role\_name | The ARN of the IAM Role created for the Fargate service |
-| task\_sg\_id | The ID of the Security Group attached to the ECS tasks |
+The following outputs are exported:
+
+#### alb\_dns\_name
+
+Description: The DNS name of the created ALB. Useful for creating a CNAME from mixmax.com DNS names.
+
+#### cloudwatch\_log\_group\_name
+
+Description: The name of the CloudWatch log group
+
+#### lb\_sg\_id
+
+Description: The ID of the Security Group attached to the LB
+
+#### task\_role\_arn
+
+Description: The ARN of the IAM Role created for the Fargate service
+
+#### task\_sg\_id
+
+Description: The ID of the Security Group attached to the ECS tasks
 
