@@ -12,7 +12,7 @@ module "web" {
   name        = local.app_name
   service     = local.service
 
-  # See `gotchas` for more about the following parameter
+  # See `gotchas` in the README for more about the following parameter
   # You almost certainly want to omit or change this value
   container_name_override = "fargate-bootstrap-${local.environment}"
 }
