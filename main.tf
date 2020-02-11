@@ -1,40 +1,20 @@
-module "cloudwatch_log_group" {
-  source      = "git::ssh://git@github.com/mixmaxhq/terraform-aws-cloudwatch-log-group?ref=v1.1.0"
-  name        = "/aws/fargate/${var.environment}/${var.name}"
-  environment = var.environment
-}
-
 module "fargate_service" {
-  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v0.4.1"
+  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v1.0.0"
 
-  name        = var.name
-  environment = var.environment
-  image       = var.image
-  is_public   = var.is_public
-  cpu         = var.cpu
-  memory      = var.memory
-
-  environment_vars = var.environment_vars
-  secrets          = var.secrets
-  container_ports  = var.container_ports
-  custom_tags      = var.custom_tags
-  task_command     = var.task_command
+  name            = var.name
+  environment     = var.environment
+  service         = var.service
+  is_public       = var.is_public
+  custom_tags     = var.custom_tags
+  task_definition = var.task_definition
   load_balancer_config = [
     for port in var.container_ports :
     {
       target_group_arn = module.alb.target_group_arns[0]
-      container_name   = local.env_name
+      container_name   = local.container_name
       container_port   = port
     }
   ]
-  log_config = {
-    "logDriver" : "awslogs",
-    "options" : {
-      "awslogs-group" : module.cloudwatch_log_group.log_group_name,
-      "awslogs-stream-prefix" : var.name,
-      "awslogs-region" : local.aws_region
-    }
-  }
 }
 
 ## Allow loadbalancer inbound to task on container port(s)

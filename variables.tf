@@ -1,5 +1,5 @@
 variable "name" {
-  description = "The name of the service to launch"
+  description = "The name of the application to launch"
   type        = string
 }
 
@@ -8,8 +8,8 @@ variable "environment" {
   type        = string
 }
 
-variable "image" {
-  description = "The image to launch. This is passed directly to the Docker engine. An example is 012345678910.dkr.ecr.us-east-1.amazonaws.com/hello-world:latest"
+variable "service" {
+  description = "The name of the service this application is associated with, ie 'send' if the application is 'send-worker'"
   type        = string
 }
 
@@ -31,34 +31,16 @@ variable "lb_allowed_sgs" {
   default     = []
 }
 
-variable "cpu" {
-  description = "The CPU credits to provide container. 256 is .25 vCPUs, 1024 is 1 vCPU, max is 4096 (4 vCPUs). Find valid values here: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html"
-  type        = number
-  default     = 512
-}
-
-variable "memory" {
-  description = "The memory to provide the container in MiB. 512 is min, 30720 is max. Find valid values here: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-cpu-memory-error.html"
-  type        = number
-  default     = 1024
-}
-
-variable "environment_vars" {
-  description = "A list of maps of environment variables to provide to the container. Do not put secrets here; instead use the `secrets` input to specify the ARN of a Parameter Store or Secrets Manager value."
-  type        = list(map(string))
-  default     = []
-}
-
-variable "secrets" {
-  description = "A list of maps of ARNs of secrets stored in Parameter Store or Secrets Manager and exposed as environment variables. Do not put actual secrets here! See examples/simple for usage."
-  type        = list(string)
-  default     = []
-}
-
 variable "container_ports" {
   description = "A list of ports the container listens on. Default is port 80"
   type        = list(number)
   default     = [80]
+}
+
+variable "container_name_override" {
+  description = "The container name is used for networking the target group to the container instances; set this field to override the container name"
+  type        = string
+  default     = ""
 }
 
 variable "custom_tags" {
@@ -73,8 +55,8 @@ variable "health_check_path" {
   default     = "/"
 }
 
-variable "task_command" {
-  description = "The command to pass directly to the docker container, according to this syntax: https://docs.docker.com/engine/reference/builder/#cmd"
-  type        = list(string)
-  default     = []
+variable "task_definition" {
+  description = "The task definition family:revision or full ARN to deploy on first run to the Fargate service. If you are deploying software with Jenkins, you can ignore this; this is used with task definitions that are managed in Terraform. If unset, the first run will use an Nginx 'hello-world' task def. Terraform will not update the task definition in the service if this value has changed."
+  type        = string
+  default     = ""
 }

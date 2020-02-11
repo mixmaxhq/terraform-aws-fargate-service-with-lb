@@ -16,8 +16,10 @@ locals {
   cert_arn        = module.global_constants.wildcard_cert_arn[var.environment]
   default_tags = {
     "Environment" : var.environment
-    "App name" : var.name
+    "Name" : var.name
+    "Service" : var.service
     "Public" : var.is_public
   }
-  tags = merge(local.default_tags, var.custom_tags)
+  tags           = merge(var.custom_tags, local.default_tags)
+  container_name = var.container_name_override == "" ? local.env_name : var.container_name_override
 }
