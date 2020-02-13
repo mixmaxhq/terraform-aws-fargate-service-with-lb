@@ -32,9 +32,9 @@ variable "lb_allowed_sgs" {
 }
 
 variable "container_ports" {
-  description = "A list of ports the container listens on. Default is port 80"
+  description = "A list of ports the container listens on. Most Mixmax Docker images 'EXPOSE' port 8080."
   type        = list(number)
-  default     = [80]
+  default     = [8080]
 }
 
 variable "container_name_override" {
