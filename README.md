@@ -80,7 +80,7 @@ Default:
 
 #### container\_ports
 
-Description: A list of ports the container listens on. Default is port 80
+Description: A list of ports the container listens on. Most Mixmax Docker images 'EXPOSE' port 8080.
 
 Type:
 `list(number)`
@@ -88,7 +88,7 @@ Type:
 Default:
 ```json
 [
-  80
+  8080
 ]
 ```
 

@@ -6,6 +6,10 @@ module "web" {
   name        = var.name
   service     = var.service
 
+  # The default for the below value is 8080; if your container listens on that port
+  # feel free to delete the below parameter.
+  container_ports = [80]
+
   # See `gotchas` in the README for more about the following parameter
   # You almost certainly want to omit or change this value
   container_name_override = "fargate-bootstrap-${var.environment}"
