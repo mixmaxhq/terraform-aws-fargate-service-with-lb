@@ -3,6 +3,11 @@ output "task_role_arn" {
   value       = module.fargate_service.task_role_arn
 }
 
+output "task_role_name" {
+  description = "The name of the IAM Role created for the Fargate service"
+  value       = module.fargate_service.task_role_name
+}
+
 output "task_sg_id" {
   description = "The ID of the Security Group attached to the ECS tasks"
   value       = module.fargate_service.task_sg_id
