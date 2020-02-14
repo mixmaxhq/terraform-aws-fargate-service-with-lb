@@ -33,7 +33,7 @@ resource "aws_security_group_rule" "task_inbound" {
 ## Load Balancer Security Group
 resource "aws_security_group" "lb" {
   name        = "${local.env_name}-lb-sg"
-  description = "Security group for ${local.env_name}-lb"
+  description = "Security group for ${local.env_name} load balancer"
   vpc_id      = local.vpc_id
 
   egress {
@@ -95,7 +95,7 @@ resource "aws_security_group_rule" "load_balancer_443_rule_for_sgs" {
 module "alb" {
   source = "git::ssh://git@github.com/terraform-aws-modules/terraform-aws-alb.git?ref=v5.0.0"
 
-  name = "${local.env_name}-lb"
+  name = "${local.env_name}"
 
   load_balancer_type = "application"
 
