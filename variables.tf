@@ -60,3 +60,15 @@ variable "task_definition" {
   type        = string
   default     = ""
 }
+
+variable "min_capacity" {
+  description = "The minimum capacity for a scaling Fargate service."
+  type        = number
+  default     = 2
+}
+
+variable "max_capacity" {
+  description = "The maximum capacity for a scaling Fargate service."
+  type        = number
+  default     = 8
+}
