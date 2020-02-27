@@ -142,6 +142,26 @@ Type:
 Default:
 `[]`
 
+#### max\_capacity
+
+Description: The maximum capacity for a scaling Fargate service.
+
+Type:
+`number`
+
+Default:
+`8`
+
+#### min\_capacity
+
+Description: The minimum capacity for a scaling Fargate service.
+
+Type:
+`number`
+
+Default:
+`2`
+
 #### task\_definition
 
 Description: The task definition family:revision or full ARN to deploy on first run to the Fargate service. If you are deploying software with Jenkins, you can ignore this; this is used with task definitions that are managed in Terraform. If unset, the first run will use an Nginx 'hello-world' task def. Terraform will not update the task definition in the service if this value has changed.
@@ -171,6 +191,10 @@ Description: The ID of the Security Group attached to the LB
 #### task\_role\_arn
 
 Description: The ARN of the IAM Role created for the Fargate service
+
+#### task\_role\_name
+
+Description: The name of the IAM Role created for the Fargate service
 
 #### task\_sg\_id
 
