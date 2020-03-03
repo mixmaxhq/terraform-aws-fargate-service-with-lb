@@ -102,6 +102,16 @@ Type:
 Default:
 `{}`
 
+#### fargate\_service\_name\_override
+
+Description: This parameter allows you to set to the Fargate service name explicitly. This is useful in cases where you need something other than the default {var.name}-{var.environment} naming convention
+
+Type:
+`string`
+
+Default:
+`""`
+
 #### health\_check\_path
 
 Description: The path the LB will GET to determine if a host is healthy. For example, /health-check  or /status. This health check should only validate that the app itself is online, not necessarily that any downstream dependent services are also online.
