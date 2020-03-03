@@ -6,7 +6,7 @@ locals {
   aws_account_id  = module.global_constants.aws_account_id[var.environment]
   aws_region      = module.global_constants.aws_region[var.environment]
   vpc_id          = module.global_constants.vpc_id[var.environment]
-  env_name        = "${var.name}-${var.environment}"
+  env_name        = var.fargate_service_name_override == "" ? "${var.name}-${var.environment}" : var.fargate_service_name_override
   container_name  = var.container_name_override == "" ? local.env_name : var.container_name_override
   private_subnets = module.global_constants.private_subnets[var.environment]
   public_subnets  = module.global_constants.public_subnets[var.environment]

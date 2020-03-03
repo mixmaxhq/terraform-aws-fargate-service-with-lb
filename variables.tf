@@ -72,3 +72,9 @@ variable "max_capacity" {
   type        = number
   default     = 8
 }
+
+variable "fargate_service_name_override" {
+  description = "This parameter allows you to set to the Fargate service name explicitly. This is useful in cases where you need something other than the default {var.name}-{var.environment} naming convention"
+  type        = string
+  default     = ""
+}
