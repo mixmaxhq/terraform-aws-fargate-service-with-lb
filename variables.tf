@@ -52,7 +52,7 @@ variable "custom_tags" {
 variable "health_check_path" {
   description = "The path the LB will GET to determine if a host is healthy. For example, /health-check  or /status. This health check should only validate that the app itself is online, not necessarily that any downstream dependent services are also online."
   type        = string
-  default     = "/"
+  default     = "/health/elb"
 }
 
 variable "task_definition" {
