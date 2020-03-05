@@ -109,6 +109,11 @@ module "alb" {
   security_groups = [aws_security_group.lb.id]
   internal        = var.is_public ? false : true
 
+  access_logs = {
+    bucket = "mixmax-lb-logs-${var.environment}"
+    prefix = local.env_name
+  }
+
   target_groups = [
     for port in var.container_ports :
     {

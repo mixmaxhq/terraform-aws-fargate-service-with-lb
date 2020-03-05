@@ -10,7 +10,22 @@ module "web" {
   # feel free to delete the below parameter.
   container_ports = [80]
 
-  # See `gotchas` in the README for more about the following parameter
-  # You almost certainly want to omit or change this value
+  # See `gotchas` in the README for more about the following parameters
+  # You almost certainly want to omit or change these values.
   container_name_override = "fargate-bootstrap-${var.environment}"
+  task_definition         = module.fargate_bootstrap_task_definition.arn
+}
+
+module "fargate_bootstrap_task_definition" {
+  source                   = "git@github.com:mixmaxhq/terraform-aws-ecs-task-definition?ref=v1.2.2"
+  family                   = "fargate-bootstrap-${var.environment}"
+  name                     = "fargate-bootstrap-${var.environment}"
+  cpu                      = 256
+  memory                   = 512
+  image                    = "nginxdemos/hello"
+  network_mode             = "awsvpc"
+  portMappings             = [{ "containerPort" : 80 }]
+  requires_compatibilities = ["FARGATE"]
+  tags                     = { "Name" : "fargate-bootstrap", "Environment" : var.environment }
+  execution_role_arn       = "arn:aws:iam::${local.aws_account_id}:role/ecsTaskExecutionRole"
 }
