@@ -109,6 +109,9 @@ module "alb" {
   security_groups = [aws_security_group.lb.id]
   internal        = var.is_public ? false : true
 
+  load_balancer_create_timeout = "20m"
+  load_balancer_update_timeout = "20m"
+
   access_logs = {
     bucket = "mixmax-lb-logs-${var.environment}"
     prefix = local.env_name
