@@ -68,7 +68,7 @@ Type:
 
 The following variables are optional (have default values):
 
-#### alarm\_sns\_topics
+#### alarm\_sns\_topic\_arns
 
 Description: This parameter is a list of the SNS topic ARNs. This is used to send alarm notifications. This is REQUIRED for production deployments!
 
