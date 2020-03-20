@@ -5,8 +5,8 @@ resource "aws_cloudwatch_metric_alarm" "http_5xx_anomaly_detection" {
   threshold_metric_id       = "e1"
   alarm_description         = "This metric monitors ec2 cpu utilization"
   insufficient_data_actions = []
-  alarm_actions             = var.alarm_sns_topics
-  ok_actions                = var.alarm_sns_topics
+  alarm_actions             = var.alarm_sns_topic_arns
+  ok_actions                = var.alarm_sns_topic_arns
 
   metric_query {
     id          = "e1"

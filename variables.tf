@@ -79,7 +79,7 @@ variable "fargate_service_name_override" {
   default     = ""
 }
 
-variable "alarm_sns_topics" {
+variable "alarm_sns_topic_arns" {
   description = "This parameter is a list of the SNS topic ARNs. This is used to send alarm notifications. This is REQUIRED for production deployments!"
   type        = list(string)
   default     = []
