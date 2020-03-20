@@ -78,3 +78,15 @@ variable "fargate_service_name_override" {
   type        = string
   default     = ""
 }
+
+variable "alarm_sns_topics" {
+  description = "This parameter is a list of the SNS topic ARNs. This is used to send alarm notifications. This is REQUIRED for production deployments!"
+  type        = list(string)
+  default     = []
+}
+
+variable "task_traffic_slow_start" {
+  description = "This parameter defines the number of seconds during which a newly registered Fargate task receives an increasing share of the traffic to the target group, giving it time to 'warm up'."
+  type        = number
+  default     = 30
+}

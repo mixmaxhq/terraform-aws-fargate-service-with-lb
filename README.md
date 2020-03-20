@@ -68,6 +68,16 @@ Type:
 
 The following variables are optional (have default values):
 
+#### alarm\_sns\_topics
+
+Description: This parameter is a list of the SNS topic ARNs. This is used to send alarm notifications. This is REQUIRED for production deployments!
+
+Type:
+`list(string)`
+
+Default:
+`[]`
+
 #### container\_name\_override
 
 Description: The container name is used for networking the target group to the container instances; set this field to override the container name
@@ -120,7 +130,7 @@ Type:
 `string`
 
 Default:
-`"/"`
+`"/health/elb"`
 
 #### is\_public
 
@@ -181,6 +191,16 @@ Type:
 
 Default:
 `""`
+
+#### task\_traffic\_slow\_start
+
+Description: This parameter defines the number of seconds during which a newly registered Fargate task receives an increasing share of the traffic to the target group, giving it time to 'warm up'.
+
+Type:
+`number`
+
+Default:
+`30`
 
 ## Outputs
 
