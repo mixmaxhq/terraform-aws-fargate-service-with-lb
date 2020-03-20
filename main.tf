@@ -125,6 +125,7 @@ module "alb" {
       backend_port         = port
       target_type          = "ip"
       deregistration_delay = 60
+      slow_start           = var.task_traffic_slow_start
 
       health_check = {
         path    = var.health_check_path
