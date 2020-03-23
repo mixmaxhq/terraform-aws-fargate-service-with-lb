@@ -90,3 +90,21 @@ variable "task_traffic_slow_start" {
   type        = number
   default     = 30
 }
+
+variable "cpu_high_threshold" {
+  description = "The CPU percentage to be considered 'high' for autoscaling purposes."
+  type        = number
+  default     = 70
+}
+
+variable "cpu_low_threshold" {
+  description = "The CPU percentage to be considered 'low' for autoscaling purposes. This was set to a 'safe' value to prevent scaling down when it's not a good idea, but please adjust this higher for your app if possible."
+  type        = number
+  default     = 30
+}
+
+variable "cpu_scaling_enabled" {
+  description = "A boolean if CPU-based autoscaling should be turned on or off"
+  type        = bool
+  default     = true
+}

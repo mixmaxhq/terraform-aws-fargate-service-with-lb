@@ -10,6 +10,10 @@ module "fargate_service" {
   min_capacity    = var.min_capacity
   max_capacity    = var.max_capacity
 
+  cpu_scaling_enabled = var.cpu_scaling_enabled
+  cpu_high_threshold  = var.cpu_high_threshold
+  cpu_low_threshold   = var.cpu_low_threshold
+
   fargate_service_name_override = var.fargate_service_name_override
 
   load_balancer_config = [
