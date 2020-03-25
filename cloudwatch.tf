@@ -3,7 +3,7 @@ resource "aws_cloudwatch_metric_alarm" "http_5xx_anomaly_detection" {
   comparison_operator       = "GreaterThanUpperThreshold"
   evaluation_periods        = "2"
   threshold_metric_id       = "e1"
-  alarm_description         = "This metric monitors ec2 cpu utilization"
+  alarm_description         = "This metric monitors 500s"
   insufficient_data_actions = []
   alarm_actions             = var.alarm_sns_topic_arns
   ok_actions                = var.alarm_sns_topic_arns
