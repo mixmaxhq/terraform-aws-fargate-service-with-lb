@@ -1,7 +1,8 @@
 resource "aws_cloudwatch_metric_alarm" "http_5xx_anomaly_detection" {
   alarm_name                = "${var.name}-${var.environment}-5xx-anomaly"
   comparison_operator       = "GreaterThanUpperThreshold"
-  evaluation_periods        = "2"
+  evaluation_periods        = "5"
+  datapoints_to_alarm       = "4"
   threshold_metric_id       = "e1"
   alarm_description         = "This metric monitors ec2 cpu utilization"
   insufficient_data_actions = []
@@ -21,7 +22,7 @@ resource "aws_cloudwatch_metric_alarm" "http_5xx_anomaly_detection" {
     metric {
       metric_name = "HTTPCode_ELB_5XX_Count"
       namespace   = "AWS/ApplicationELB"
-      period      = "120"
+      period      = "60"
       stat        = "Sum"
       unit        = "Count"
 
