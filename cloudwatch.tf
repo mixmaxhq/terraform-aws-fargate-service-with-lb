@@ -9,6 +9,10 @@ resource "aws_cloudwatch_metric_alarm" "http_5xx_anomaly_detection" {
   alarm_actions             = var.alarm_sns_topic_arns
   ok_actions                = var.alarm_sns_topic_arns
 
+  # Missing data on this metric means that there are no 5xx errors;
+  # therefore, we treat missing data as a good thing.
+  treat_missing_data = "notBreaching"
+
   metric_query {
     id          = "e1"
     expression  = "ANOMALY_DETECTION_BAND(m1)"
