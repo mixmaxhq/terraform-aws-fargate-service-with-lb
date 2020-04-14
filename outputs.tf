@@ -23,6 +23,16 @@ output "alb_dns_name" {
   value       = module.alb.this_lb_dns_name
 }
 
+output "alb_arn" {
+  description = "The ARN of the created ALB"
+  value       = module.alb.this_lb_arn
+}
+
+output "alb_listener_arn" {
+  description = "The ARN of the HTTPS ALB listener"
+  value       = module.alb.https_listener_arns[0]
+}
+
 output "cloudwatch_log_group_name" {
   description = "The name of the CloudWatch log group"
   value       = module.fargate_service.cloudwatch_log_group_name
