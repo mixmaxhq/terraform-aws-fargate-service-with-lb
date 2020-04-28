@@ -11,6 +11,7 @@ pipeline {
       steps {
         sh 'terraform fmt -check -no-color -recursive'
         sh 'terraform fmt -check -no-color -recursive examples/simple'
+        sh 'terraform fmt -check -no-color -recursive examples/public_only_to_github'
         withCredentials([sshUserPrivateKey(credentialsId: 'mixmax-bot-github-ssh', keyFileVariable: 'SSH_KEY')]) {
           // The following line ensures there is no existing .ssh folder.
           // It should not exist but I really want to be defensive here.
@@ -23,9 +24,11 @@ pipeline {
           sh 'echo "  StrictHostKeyChecking accept-new" >> ~/.ssh/config'
           sh 'chmod 600 ~/.ssh/config'
           sh 'terraform init -no-color examples/simple'
+          sh 'terraform init -no-color examples/public_only_to_github'
           sh 'rm -rf ~/.ssh'
         }
         sh 'terraform validate -no-color examples/simple'
+        sh 'terraform validate -no-color examples/public_only_to_github'
       }
     }
   }
