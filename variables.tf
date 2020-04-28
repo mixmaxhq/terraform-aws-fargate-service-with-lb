@@ -108,3 +108,15 @@ variable "cpu_scaling_enabled" {
   type        = bool
   default     = true
 }
+
+variable "idle_timeout" {
+  description = "The connection idle timeout value for the created load balancer"
+  type        = number
+  default     = 60
+}
+
+variable "set_public_sg_rule" {
+  description = "Whether to set the public security group rule allowing all access"
+  type        = bool
+  default     = true
+}

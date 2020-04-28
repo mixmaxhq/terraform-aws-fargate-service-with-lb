@@ -56,7 +56,7 @@ resource "aws_security_group" "lb" {
 }
 
 resource "aws_security_group_rule" "public_load_balancer_80_rule" {
-  count             = var.is_public ? 1 : 0
+  count             = var.is_public && var.set_public_sg_rule ? 1 : 0
   security_group_id = aws_security_group.lb.id
 
   type        = "ingress"
@@ -67,7 +67,7 @@ resource "aws_security_group_rule" "public_load_balancer_80_rule" {
 }
 
 resource "aws_security_group_rule" "public_load_balancer_443_rule" {
-  count             = var.is_public ? 1 : 0
+  count             = var.is_public && var.set_public_sg_rule ? 1 : 0
   security_group_id = aws_security_group.lb.id
 
   type        = "ingress"
@@ -112,6 +112,7 @@ module "alb" {
   subnets         = local.lb_subnets
   security_groups = [aws_security_group.lb.id]
   internal        = var.is_public ? false : true
+  idle_timeout    = var.idle_timeout
 
   load_balancer_create_timeout = "20m"
   load_balancer_update_timeout = "20m"
