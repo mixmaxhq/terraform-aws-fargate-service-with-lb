@@ -16,14 +16,16 @@ module "fargate_service" {
 
   fargate_service_name_override = var.fargate_service_name_override
 
-  load_balancer_config = [
+  load_balancer_config = concat([
     for port in var.container_ports :
     {
       target_group_arn = module.alb.target_group_arns[0]
       container_name   = local.container_name
       container_port   = port
     }
-  ]
+    ],
+    var.extra_load_balancer_configs
+  )
 }
 
 ## Allow loadbalancer inbound to task on container port(s)
