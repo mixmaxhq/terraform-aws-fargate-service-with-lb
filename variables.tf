@@ -120,3 +120,9 @@ variable "set_public_sg_rule" {
   type        = bool
   default     = true
 }
+
+variable "extra_load_balancer_configs" {
+  description = "Extra load balancer configurations; used when you want one ECS service fronted by multiple load balancers."
+  type        = list(object({ target_group_arn = string, container_name = string, container_port = number }))
+  default     = []
+}
