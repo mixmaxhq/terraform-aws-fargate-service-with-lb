@@ -3,7 +3,7 @@ variable "name" {
 }
 
 variable "environment" {
-  description = "The environment this service lives in"
+  description = "The environment this service lives in, ie 'production', 'staging', etc"
 }
 
 variable "service" {

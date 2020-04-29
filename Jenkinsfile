@@ -1,7 +1,7 @@
 // This name is defined in the Jenkins management console, and pulled from a github repository under
 // our mixmaxhq organization by the same name. Specify a specific tag/revision by appending it along
 // with an '@' symbol to the string literal.
-@Library('scm-service-library@ryant/basic_terraform_module_pipeline') _
+@Library('scm-service-library') _
 
 terraformModulePipeline {
   // The following contains the directories of each example to lint & validate

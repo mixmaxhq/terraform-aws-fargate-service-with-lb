@@ -1,10 +1,13 @@
 ## In this example, one load balancer is created by the module itself.
 ## Another is created outside the module and its details fed into the 
 ## module's `extra_load_balancer_configs`. Keep in mind that this load
-## balancer is manually managed; it contains no monitoring, no permenant
+## balancer is manually managed; it contains no monitoring, no permanent
 ## redirect to HTTPS from port 80, no security groups allowing traffic
 ## inbound, no tags - ie, this is hard mode and you are now responsible
-## for all these details 😈 (Please at least add tags & monitoring...)
+## for all these details 😈 You are absolutely REQUIRED to add tags &
+## monitoring; future tooling may do scary things to your infrastructure
+## if you do not. A minimal set of tags has been added to the ALB for
+## your convenience.
 
 module "web" {
   ## In a real service, use the following line instead of the relative source path:
@@ -77,6 +80,13 @@ module "alb" {
       target_group_index = 0
     }
   ]
+
+  tags = {
+    Name        = "${var.name}-2-${var.environment}"
+    Environment = var.environment
+    Service     = var.service
+    Public      = "false"
+  }
 }
 
 
