@@ -102,6 +102,36 @@ Default:
 ]
 ```
 
+#### cpu\_high\_threshold
+
+Description: The CPU percentage to be considered 'high' for autoscaling purposes.
+
+Type:
+`number`
+
+Default:
+`70`
+
+#### cpu\_low\_threshold
+
+Description: The CPU percentage to be considered 'low' for autoscaling purposes. This was set to a 'safe' value to prevent scaling down when it's not a good idea, but please adjust this higher for your app if possible.
+
+Type:
+`number`
+
+Default:
+`30`
+
+#### cpu\_scaling\_enabled
+
+Description: A boolean if CPU-based autoscaling should be turned on or off
+
+Type:
+`bool`
+
+Default:
+`true`
+
 #### custom\_tags
 
 Description: A mapping of custom tags to add to the generated resources.
@@ -111,6 +141,26 @@ Type:
 
 Default:
 `{}`
+
+#### custom\_tls\_cert\_arn
+
+Description: The ARN of a custom Amazon Certificate Manager certificate to use with the load balancer. If left unset, uses a cert for `*.mixmax.com`
+
+Type:
+`string`
+
+Default:
+`""`
+
+#### extra\_load\_balancer\_configs
+
+Description: Extra load balancer configurations; used when you want one ECS service fronted by multiple load balancers.
+
+Type:
+`list(object({ target_group_arn = string, container_name = string, container_port = number }))`
+
+Default:
+`[]`
 
 #### fargate\_service\_name\_override
 
@@ -131,6 +181,16 @@ Type:
 
 Default:
 `"/health/elb"`
+
+#### idle\_timeout
+
+Description: The connection idle timeout value for the created load balancer
+
+Type:
+`number`
+
+Default:
+`60`
 
 #### is\_public
 
@@ -182,6 +242,16 @@ Type:
 Default:
 `2`
 
+#### set\_public\_sg\_rule
+
+Description: Whether to set the public security group rule allowing all access
+
+Type:
+`bool`
+
+Default:
+`true`
+
 #### task\_definition
 
 Description: The task definition family:revision or full ARN to deploy on first run to the Fargate service. If you are deploying software with Jenkins, you can ignore this; this is used with task definitions that are managed in Terraform. If unset, the first run will use an Nginx 'hello-world' task def. Terraform will not update the task definition in the service if this value has changed.
@@ -206,13 +276,25 @@ Default:
 
 The following outputs are exported:
 
+#### alb\_arn
+
+Description: The ARN of the created ALB
+
 #### alb\_dns\_name
 
 Description: The DNS name of the created ALB. Useful for creating a CNAME from mixmax.com DNS names.
 
+#### alb\_listener\_arn
+
+Description: The ARN of the HTTPS ALB listener
+
 #### cloudwatch\_log\_group\_name
 
 Description: The name of the CloudWatch log group
+
+#### lb\_arn\_suffix
+
+Description: The ARN suffix of the application load balancer. Useful for Cloudwatch alarms
 
 #### lb\_sg\_id
 
@@ -229,4 +311,8 @@ Description: The name of the IAM Role created for the Fargate service
 #### task\_sg\_id
 
 Description: The ID of the Security Group attached to the ECS tasks
+
+#### tg\_arn\_suffix
+
+Description: The ARN suffixes of the target group in the application load balancer. Useful for Cloudwatch alarms
 

@@ -126,3 +126,9 @@ variable "extra_load_balancer_configs" {
   type        = list(object({ target_group_arn = string, container_name = string, container_port = number }))
   default     = []
 }
+
+variable "custom_tls_cert_arn" {
+  description = "The ARN of a custom Amazon Certificate Manager certificate to use with the load balancer. If left unset, uses a cert for `*.mixmax.com`"
+  type        = string
+  default     = ""
+}
