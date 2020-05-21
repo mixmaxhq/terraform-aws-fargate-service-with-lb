@@ -194,7 +194,7 @@ Default:
 
 #### is\_public
 
-Description: A boolean describing if the service is public or internal only.
+Description: Whether the service is public or internal only.
 
 Type:
 `bool`
@@ -244,7 +244,7 @@ Default:
 
 #### set\_public\_sg\_rule
 
-Description: Whether to set the public security group rule allowing all access
+Description: Whether to set the public security group rule allowing all access. This is only used on public load balancers and is useful to set to 'false' if you want to create an internet-facing load balancer that only accepts traffic from certain sources, ie Github -> Jenkins but nothing else over the public internet.
 
 Type:
 `bool`
