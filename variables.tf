@@ -14,7 +14,7 @@ variable "service" {
 }
 
 variable "is_public" {
-  description = "A boolean describing if the service is public or internal only."
+  description = "Whether the service is public or internal only."
   type        = bool
   default     = false
 }
@@ -104,7 +104,7 @@ variable "cpu_low_threshold" {
 }
 
 variable "cpu_scaling_enabled" {
-  description = "A boolean if CPU-based autoscaling should be turned on or off"
+  description = "Whether CPU-based autoscaling should be turned on or off"
   type        = bool
   default     = true
 }
@@ -116,7 +116,7 @@ variable "idle_timeout" {
 }
 
 variable "set_public_sg_rule" {
-  description = "Whether to set the public security group rule allowing all access"
+  description = "Whether to set the public security group rule allowing all access. This is only used on public load balancers and is useful to set to 'false' if you want to create an internet-facing load balancer that only accepts traffic from certain sources, ie Github -> Jenkins but nothing else over the public internet."
   type        = bool
   default     = true
 }
@@ -125,4 +125,10 @@ variable "extra_load_balancer_configs" {
   description = "Extra load balancer configurations; used when you want one ECS service fronted by multiple load balancers."
   type        = list(object({ target_group_arn = string, container_name = string, container_port = number }))
   default     = []
+}
+
+variable "custom_tls_cert_arn" {
+  description = "The ARN of a custom Amazon Certificate Manager certificate to use with the load balancer. If left unset, uses a cert for `*.mixmax.com`"
+  type        = string
+  default     = ""
 }

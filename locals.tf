@@ -14,7 +14,7 @@ locals {
   bastion_sg_id   = module.global_constants.bastion_sg_id[var.environment]
   vpn_sg_id       = module.global_constants.vpn_sg_id[var.environment]
   lb_allowed_sgs  = concat([local.bastion_sg_id, local.vpn_sg_id], var.lb_allowed_sgs)
-  cert_arn        = module.global_constants.wildcard_cert_arn[var.environment]
+  cert_arn        = var.custom_tls_cert_arn != "" ? var.custom_tls_cert_arn : module.global_constants.wildcard_cert_arn[var.environment]
   default_tags = {
     "Environment" : var.environment
     "Name" : var.name
