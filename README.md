@@ -124,7 +124,7 @@ Default:
 
 #### cpu\_scaling\_enabled
 
-Description: A boolean if CPU-based autoscaling should be turned on or off
+Description: Whether CPU-based autoscaling should be turned on or off
 
 Type:
 `bool`
@@ -315,4 +315,3 @@ Description: The ID of the Security Group attached to the ECS tasks
 #### tg\_arn\_suffix
 
 Description: The ARN suffixes of the target group in the application load balancer. Useful for Cloudwatch alarms
-
