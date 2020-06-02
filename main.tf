@@ -118,6 +118,7 @@ module "alb" {
 
   load_balancer_create_timeout = "20m"
   load_balancer_update_timeout = "20m"
+  listener_ssl_policy_default  = "ELBSecurityPolicy-TLS-1-2-2017-01"
 
   access_logs = {
     bucket = "mixmax-lb-logs-${var.environment}"
