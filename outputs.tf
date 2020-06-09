@@ -44,6 +44,11 @@ output "lb_arn_suffix" {
 }
 
 # As of now, this module only creates one target group; thus we only emit the first item of the list.
+output "tg_arn" {
+  description = "The ARN of the target group in the application load balancer."
+  value       = module.alb.target_group_arns[0]
+}
+
 output "tg_arn_suffix" {
   description = "The ARN suffixes of the target group in the application load balancer. Useful for Cloudwatch alarms"
   value       = module.alb.target_group_arn_suffixes[0]
