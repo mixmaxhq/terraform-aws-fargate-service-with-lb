@@ -4,7 +4,7 @@ resource "aws_cloudwatch_metric_alarm" "http_5xx_anomaly_detection" {
   evaluation_periods        = "5"
   datapoints_to_alarm       = "4"
   threshold_metric_id       = "e1"
-  alarm_description         = "This metric monitors 500s"
+  alarm_description         = "Count of 5xx HTTP statuses on ${var.name}-${var.environment}'s load balancer are high"
   insufficient_data_actions = []
   alarm_actions             = var.alarm_sns_topic_arns
   ok_actions                = var.alarm_sns_topic_arns
