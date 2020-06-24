@@ -9,6 +9,7 @@ module "fargate_service" {
   task_definition = var.task_definition
   min_capacity    = var.min_capacity
   max_capacity    = var.max_capacity
+  service_subnets = local.service_subnets
 
   cpu_scaling_enabled = var.cpu_scaling_enabled
   cpu_high_threshold  = var.cpu_high_threshold

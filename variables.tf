@@ -132,3 +132,9 @@ variable "custom_tls_cert_arn" {
   type        = string
   default     = ""
 }
+
+variable "service_subnets" {
+  description = "A list of subnet IDs to use for instantiating the fargate service. By default this will use the private subnets."
+  type        = list(string)
+  default     = []
+}
