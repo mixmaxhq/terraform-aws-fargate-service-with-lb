@@ -10,6 +10,7 @@ locals {
   container_name  = var.container_name_override == "" ? local.env_name : var.container_name_override
   private_subnets = module.global_constants.private_subnets[var.environment]
   public_subnets  = module.global_constants.public_subnets[var.environment]
+  service_subnets = var.service_subnets == [] ? local.private_subnets : var.service_subnets
   lb_subnets      = var.is_public ? local.public_subnets : local.private_subnets
   bastion_sg_id   = module.global_constants.bastion_sg_id[var.environment]
   vpn_sg_id       = module.global_constants.vpn_sg_id[var.environment]
