@@ -127,10 +127,10 @@ variable "extra_load_balancer_configs" {
   default     = []
 }
 
-variable "custom_tls_cert_arn" {
-  description = "The ARN of a custom Amazon Certificate Manager certificate to use with the load balancer. If left unset, uses a cert for `*.mixmax.com`"
-  type        = string
-  default     = ""
+variable "custom_tls_cert_arns" {
+  description = "The ARNs of custom Amazon Certificate Manager certificates to use with the load balancer. If left unset or empty, uses a cert for `*.mixmax.com`"
+  type        = list(string)
+  default     = []
 }
 
 variable "service_subnets" {

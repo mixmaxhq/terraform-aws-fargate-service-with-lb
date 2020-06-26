@@ -144,10 +144,11 @@ module "alb" {
   ]
 
   https_listeners = [
+    for cert_arn in local.cert_arns :
     {
       port               = 443
       protocol           = "HTTPS"
-      certificate_arn    = local.cert_arn
+      certificate_arn    = cert_arn
       target_group_index = 0
     }
   ]
