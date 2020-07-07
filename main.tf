@@ -1,5 +1,5 @@
 module "fargate_service" {
-  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v2.0.0"
+  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v2.1.0"
 
   name            = var.name
   environment     = var.environment
@@ -27,6 +27,8 @@ module "fargate_service" {
     ],
     var.extra_load_balancer_configs
   )
+
+  capacity_provider_strategies = var.capacity_provider_strategies
 }
 
 ## Allow loadbalancer inbound to task on container port(s)

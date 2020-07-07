@@ -138,3 +138,13 @@ variable "service_subnets" {
   type        = list(string)
   default     = []
 }
+
+variable "capacity_provider_strategies" {
+  description = "The capacity provider (supported by the configured cluster) to use to provision tasks for the service"
+  type = list(object({
+    capacity_provider = string
+    base              = number
+    weight            = number
+  }))
+  default = []
+}
