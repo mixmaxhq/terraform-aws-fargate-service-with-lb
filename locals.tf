@@ -1,5 +1,5 @@
 module "global_constants" {
-  source = "git::ssh://git@github.com/mixmaxhq/terraform-global-constants.git?ref=v2.1.3"
+  source = "git::ssh://git@github.com/mixmaxhq/terraform-global-constants.git?ref=v3.0.0"
 }
 
 locals {
