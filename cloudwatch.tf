@@ -15,7 +15,7 @@ resource "aws_cloudwatch_metric_alarm" "http_5xx_anomaly_detection" {
 
   metric_query {
     id          = "e1"
-    expression  = "ANOMALY_DETECTION_BAND(m1)"
+    expression  = "ANOMALY_DETECTION_BAND(m1, ${var.anomaly_detection_band_threshold})"
     label       = "5xx Errors (Expected)"
     return_data = "true"
   }

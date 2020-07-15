@@ -148,3 +148,9 @@ variable "capacity_provider_strategies" {
   }))
   default = []
 }
+
+variable "anomaly_detection_band_threshold" {
+  description = "This determines how wide the anomaly threshold band is for detecting 5xx errors"
+  default     = 10
+  type        = number
+}
