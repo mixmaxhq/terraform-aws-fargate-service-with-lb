@@ -12,9 +12,8 @@ locals {
   public_subnets  = module.global_constants.public_subnets[var.environment]
   service_subnets = var.service_subnets == [] ? local.private_subnets : var.service_subnets
   lb_subnets      = var.is_public ? local.public_subnets : local.private_subnets
-  bastion_sg_id   = module.global_constants.bastion_sg_id[var.environment]
   vpn_sg_id       = module.global_constants.vpn_sg_id[var.environment]
-  lb_allowed_sgs  = concat([local.bastion_sg_id, local.vpn_sg_id], var.lb_allowed_sgs)
+  lb_allowed_sgs  = concat([local.vpn_sg_id], var.lb_allowed_sgs)
   cert_arns       = length(var.custom_tls_cert_arns) > 0 ? var.custom_tls_cert_arns : list(module.global_constants.wildcard_cert_arn[var.environment])
   default_tags = {
     "Environment" : var.environment

@@ -78,6 +78,22 @@ Type:
 Default:
 `[]`
 
+#### capacity\_provider\_strategies
+
+Description: The capacity provider (supported by the configured cluster) to use to provision tasks for the service
+
+Type:
+```hcl
+list(object({
+    capacity_provider = string
+    base              = number
+    weight            = number
+  }))
+```
+
+Default:
+`[]`
+
 #### container\_name\_override
 
 Description: The container name is used for networking the target group to the container instances; set this field to override the container name
@@ -142,15 +158,15 @@ Type:
 Default:
 `{}`
 
-#### custom\_tls\_cert\_arn
+#### custom\_tls\_cert\_arns
 
-Description: The ARN of a custom Amazon Certificate Manager certificate to use with the load balancer. If left unset, uses a cert for `*.mixmax.com`
+Description: The ARNs of custom Amazon Certificate Manager certificates to use with the load balancer. If left unset or empty, uses a cert for `*.mixmax.com`
 
 Type:
-`string`
+`list(string)`
 
 Default:
-`""`
+`[]`
 
 #### extra\_load\_balancer\_configs
 
@@ -214,7 +230,7 @@ Default:
 
 #### lb\_allowed\_sgs
 
-Description: A list of strings of Security Group IDs to allow inbound to the load balancer. The bastion is allowed by default.
+Description: A list of strings of Security Group IDs to allow inbound to the load balancer.
 
 Type:
 `list(string)`
@@ -241,6 +257,16 @@ Type:
 
 Default:
 `2`
+
+#### service\_subnets
+
+Description: A list of subnet IDs to use for instantiating the fargate service. By default this will use the private subnets.
+
+Type:
+`list(string)`
+
+Default:
+`[]`
 
 #### set\_public\_sg\_rule
 
@@ -312,6 +338,11 @@ Description: The name of the IAM Role created for the Fargate service
 
 Description: The ID of the Security Group attached to the ECS tasks
 
+#### tg\_arn
+
+Description: The ARN of the target group in the application load balancer.
+
 #### tg\_arn\_suffix
 
 Description: The ARN suffixes of the target group in the application load balancer. Useful for Cloudwatch alarms
+

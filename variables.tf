@@ -26,7 +26,7 @@ variable "lb_allowed_cidrs" {
 }
 
 variable "lb_allowed_sgs" {
-  description = "A list of strings of Security Group IDs to allow inbound to the load balancer. The bastion is allowed by default."
+  description = "A list of strings of Security Group IDs to allow inbound to the load balancer."
   type        = list(string)
   default     = []
 }
