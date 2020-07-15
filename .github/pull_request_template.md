@@ -12,7 +12,4 @@ Jira:
 <!-- Add any tasks that need to be done before/during/after release beyond creating and merging the deploy PR: creating indices, deploying other services, bumping modules, etc. -->
 
 #### Checklist
-- [ ] I've increased test coverage
-- [ ] I've enabled Flow in the files I've touched
-- [ ] I'm using ODM for database calls
 - [ ] Should this involve a live code review and/or demo?
