@@ -50,6 +50,13 @@ Description: The environment to deploy into. Some valid values are production, s
 Type:
 `string`
 
+#### lb\_subnets
+
+Description: A list of subnet IDs to use for instantiating the load balancer.
+
+Type:
+`list(string)`
+
 #### name
 
 Description: The name of the application to launch
@@ -64,6 +71,20 @@ Description: The name of the service this application is associated with, ie 'se
 Type:
 `string`
 
+#### service\_subnets
+
+Description: A list of subnet IDs to use for instantiating the Fargate service. Tasks will be deployed into these subnets.
+
+Type:
+`list(string)`
+
+#### tls\_cert\_arns
+
+Description: The ARNs of Amazon Certificate Manager certificates to use with the HTTPS listener on the  load balancer. You *must* provide at least one.
+
+Type:
+`list(string)`
+
 ### Optional Variables
 
 The following variables are optional (have default values):
@@ -77,6 +98,16 @@ Type:
 
 Default:
 `[]`
+
+#### anomaly\_detection\_band\_threshold
+
+Description: This determines how wide the anomaly threshold band is for detecting 5xx errors
+
+Type:
+`number`
+
+Default:
+`10`
 
 #### capacity\_provider\_strategies
 
@@ -157,16 +188,6 @@ Type:
 
 Default:
 `{}`
-
-#### custom\_tls\_cert\_arns
-
-Description: The ARNs of custom Amazon Certificate Manager certificates to use with the load balancer. If left unset or empty, uses a cert for `*.mixmax.com`
-
-Type:
-`list(string)`
-
-Default:
-`[]`
 
 #### extra\_load\_balancer\_configs
 
@@ -257,16 +278,6 @@ Type:
 
 Default:
 `2`
-
-#### service\_subnets
-
-Description: A list of subnet IDs to use for instantiating the fargate service. By default this will use the private subnets.
-
-Type:
-`list(string)`
-
-Default:
-`[]`
 
 #### set\_public\_sg\_rule
 

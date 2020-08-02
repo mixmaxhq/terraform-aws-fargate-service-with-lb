@@ -1,3 +1,7 @@
+terraform {
+  experiments = [variable_validation]
+}
+
 variable "name" {
   description = "The name of the application to launch"
   type        = string
@@ -127,16 +131,24 @@ variable "extra_load_balancer_configs" {
   default     = []
 }
 
-variable "custom_tls_cert_arns" {
-  description = "The ARNs of custom Amazon Certificate Manager certificates to use with the load balancer. If left unset or empty, uses a cert for `*.mixmax.com`"
+variable "tls_cert_arns" {
+  description = "The ARNs of Amazon Certificate Manager certificates to use with the HTTPS listener on the load balancer. You *must* provide at least one."
   type        = list(string)
-  default     = []
+
+  validation {
+    condition     = length(var.tls_cert_arns) > 0
+    error_message = "You must provide at least one TLS certificate ARN from ACM."
+  }
 }
 
 variable "service_subnets" {
-  description = "A list of subnet IDs to use for instantiating the fargate service. By default this will use the private subnets."
+  description = "A list of subnet IDs to use for instantiating the Fargate service. Tasks will be deployed into these subnets."
   type        = list(string)
-  default     = []
+}
+
+variable "lb_subnets" {
+  description = "A list of subnet IDs to use for instantiating the load balancer."
+  type        = list(string)
 }
 
 variable "capacity_provider_strategies" {
