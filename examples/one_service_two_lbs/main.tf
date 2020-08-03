@@ -21,6 +21,11 @@ module "web" {
   # feel free to delete the below parameter.
   container_ports = [80]
 
+  # Networking inputs
+  service_subnets = local.private_subnets
+  lb_subnets      = local.private_subnets
+  tls_cert_arns   = [local.cert_arn]
+
   # Here we feed in details of the ALB that's configured below this module
   extra_load_balancer_configs = [
     {

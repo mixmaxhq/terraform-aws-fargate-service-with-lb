@@ -1,5 +1,5 @@
 module "fargate_service" {
-  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v2.1.3"
+  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v3.0.0"
 
   name            = var.name
   environment     = var.environment
@@ -9,7 +9,7 @@ module "fargate_service" {
   task_definition = var.task_definition
   min_capacity    = var.min_capacity
   max_capacity    = var.max_capacity
-  service_subnets = local.service_subnets
+  service_subnets = var.service_subnets
 
   cpu_scaling_enabled = var.cpu_scaling_enabled
   cpu_high_threshold  = var.cpu_high_threshold
@@ -83,7 +83,7 @@ resource "aws_security_group_rule" "public_load_balancer_443_rule" {
 }
 
 resource "aws_security_group_rule" "load_balancer_80_rule_for_sgs" {
-  count             = length(local.lb_allowed_sgs)
+  count             = length(var.lb_allowed_sgs)
   security_group_id = aws_security_group.lb.id
 
   type      = "ingress"
@@ -91,11 +91,11 @@ resource "aws_security_group_rule" "load_balancer_80_rule_for_sgs" {
   to_port   = 80
   protocol  = "tcp"
 
-  source_security_group_id = local.lb_allowed_sgs[count.index]
+  source_security_group_id = var.lb_allowed_sgs[count.index]
 }
 
 resource "aws_security_group_rule" "load_balancer_443_rule_for_sgs" {
-  count             = length(local.lb_allowed_sgs)
+  count             = length(var.lb_allowed_sgs)
   security_group_id = aws_security_group.lb.id
 
   type      = "ingress"
@@ -103,7 +103,7 @@ resource "aws_security_group_rule" "load_balancer_443_rule_for_sgs" {
   to_port   = 443
   protocol  = "tcp"
 
-  source_security_group_id = local.lb_allowed_sgs[count.index]
+  source_security_group_id = var.lb_allowed_sgs[count.index]
 }
 
 module "alb" {
@@ -114,7 +114,7 @@ module "alb" {
   load_balancer_type = "application"
 
   vpc_id          = local.vpc_id
-  subnets         = local.lb_subnets
+  subnets         = var.lb_subnets
   security_groups = [aws_security_group.lb.id]
   internal        = var.is_public ? false : true
   idle_timeout    = var.idle_timeout
@@ -147,15 +147,16 @@ module "alb" {
 
   https_listeners = [
     {
-      port               = 443
-      protocol           = "HTTPS"
-      certificate_arn    = local.cert_arns[0]
+      port     = 443
+      protocol = "HTTPS"
+      # We validate in the variable declaration that we have at least one certificate ARN provided to us.
+      certificate_arn    = var.tls_cert_arns[0]
       target_group_index = 0
     }
   ]
 
   extra_ssl_certs = [
-    for cert_arn in slice(local.cert_arns, 1, length(local.cert_arns)) :
+    for cert_arn in slice(var.tls_cert_arns, 1, length(var.tls_cert_arns)) :
     {
       certificate_arn      = cert_arn
       https_listener_index = 0

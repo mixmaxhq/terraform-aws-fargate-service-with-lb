@@ -6,6 +6,11 @@ module "web" {
   name        = var.name
   service     = var.service
 
+  # Networking inputs
+  tls_cert_arns   = [local.wildcard_cert_arn]
+  service_subnets = local.private_subnets
+  lb_subnets      = local.private_subnets
+
   # The default for the below value is 8080; if your container listens on that port
   # feel free to delete the below parameter.
   container_ports = [80]
