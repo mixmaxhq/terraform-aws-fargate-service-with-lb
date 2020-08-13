@@ -1,5 +1,5 @@
 module "fargate_service" {
-  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v3.0.0"
+  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v3.2.0"
 
   name            = var.name
   environment     = var.environment
@@ -16,6 +16,7 @@ module "fargate_service" {
   cpu_low_threshold   = var.cpu_low_threshold
 
   fargate_service_name_override = var.fargate_service_name_override
+  health_check_grace_period     = var.health_check_grace_period
 
   load_balancer_config = concat([
     for port in var.container_ports :
@@ -107,7 +108,7 @@ resource "aws_security_group_rule" "load_balancer_443_rule_for_sgs" {
 }
 
 module "alb" {
-  source = "git::ssh://git@github.com/terraform-aws-modules/terraform-aws-alb.git?ref=v5.0.0"
+  source = "git::ssh://git@github.com/terraform-aws-modules/terraform-aws-alb.git?ref=v5.7.0"
 
   name = "${local.env_name}"
 

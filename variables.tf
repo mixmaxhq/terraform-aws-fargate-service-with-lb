@@ -59,6 +59,12 @@ variable "health_check_path" {
   default     = "/health/elb"
 }
 
+variable "health_check_grace_period" {
+  description = "The load balancer health check grace period in seconds. This defines how long ECS will ignore failing load balancer chcecks on newly instantiated tasks."
+  type        = number
+  default     = 90
+}
+
 variable "task_definition" {
   description = "The task definition family:revision or full ARN to deploy on first run to the Fargate service. If you are deploying software with Jenkins, you can ignore this; this is used with task definitions that are managed in Terraform. If unset, the first run will use an Nginx 'hello-world' task def. Terraform will not update the task definition in the service if this value has changed."
   type        = string
