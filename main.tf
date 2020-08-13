@@ -1,5 +1,5 @@
 module "fargate_service" {
-  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v3.0.0"
+  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v3.2.0"
 
   name            = var.name
   environment     = var.environment
@@ -14,6 +14,8 @@ module "fargate_service" {
   cpu_scaling_enabled = var.cpu_scaling_enabled
   cpu_high_threshold  = var.cpu_high_threshold
   cpu_low_threshold   = var.cpu_low_threshold
+
+  cloudwatch_evaluation_periods = var.cloudwatch_evaluation_periods
 
   fargate_service_name_override = var.fargate_service_name_override
 
