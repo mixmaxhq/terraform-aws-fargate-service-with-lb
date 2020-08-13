@@ -18,6 +18,7 @@ module "fargate_service" {
   cloudwatch_evaluation_periods = var.cloudwatch_evaluation_periods
 
   fargate_service_name_override = var.fargate_service_name_override
+  health_check_grace_period     = var.health_check_grace_period
 
   load_balancer_config = concat([
     for port in var.container_ports :
@@ -109,7 +110,7 @@ resource "aws_security_group_rule" "load_balancer_443_rule_for_sgs" {
 }
 
 module "alb" {
-  source = "git::ssh://git@github.com/terraform-aws-modules/terraform-aws-alb.git?ref=v5.0.0"
+  source = "git::ssh://git@github.com/terraform-aws-modules/terraform-aws-alb.git?ref=v5.7.0"
 
   name = "${local.env_name}"
 

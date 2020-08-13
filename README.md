@@ -80,7 +80,7 @@ Type:
 
 #### tls\_cert\_arns
 
-Description: The ARNs of Amazon Certificate Manager certificates to use with the HTTPS listener on the  load balancer. You *must* provide at least one.
+Description: The ARNs of Amazon Certificate Manager certificates to use with the HTTPS listener on the load balancer. You *must* provide at least one.
 
 Type:
 `list(string)`
@@ -208,6 +208,16 @@ Type:
 
 Default:
 `""`
+
+#### health\_check\_grace\_period
+
+Description: The load balancer health check grace period in seconds. This defines how long ECS will ignore failing load balancer chcecks on newly instantiated tasks.
+
+Type:
+`number`
+
+Default:
+`90`
 
 #### health\_check\_path
 
