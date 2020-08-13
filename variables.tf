@@ -113,6 +113,12 @@ variable "cpu_scaling_enabled" {
   default     = true
 }
 
+variable "cloudwatch_evaluation_periods" {
+  description = "The number of times a metric must exceed thresholds before an alarm triggers. For example, if `period` is set to 60 seconds, and this is set to 2, a given threshold must have been exceeded twice over 120 seconds."
+  type        = number
+  default     = 1
+}
+
 variable "idle_timeout" {
   description = "The connection idle timeout value for the created load balancer"
   type        = number
