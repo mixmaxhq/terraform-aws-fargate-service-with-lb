@@ -178,3 +178,14 @@ variable "anomaly_detection_band_threshold" {
   default     = 10
   type        = number
 }
+
+variable "load_balancing_algorithm_type" {
+  description = "This variable defines if new requests are routed round_robin or least_outstanding_requests"
+  default     = "round_robin"
+  type        = string
+
+  validation {
+    condition     = contains(["round_robin", "least_outstanding_requests"], var.load_balancing_algorithm_type)
+    error_message = "The only valid values are 'round_robin' or 'least_outstanding_requests'."
+  }
+}
