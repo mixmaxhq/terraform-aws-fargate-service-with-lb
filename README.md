@@ -125,6 +125,16 @@ list(object({
 Default:
 `[]`
 
+#### cloudwatch\_evaluation\_periods
+
+Description: The number of times a metric must exceed thresholds before an alarm triggers. For example, if `period` is set to 60 seconds, and this is set to 2, a given threshold must have been exceeded twice over 120 seconds.
+
+Type:
+`number`
+
+Default:
+`1`
+
 #### container\_name\_override
 
 Description: The container name is used for networking the target group to the container instances; set this field to override the container name
@@ -268,6 +278,16 @@ Type:
 
 Default:
 `[]`
+
+#### load\_balancing\_algorithm\_type
+
+Description: This variable defines if new requests are routed round_robin or least_outstanding_requests
+
+Type:
+`string`
+
+Default:
+`"round_robin"`
 
 #### max\_capacity
 

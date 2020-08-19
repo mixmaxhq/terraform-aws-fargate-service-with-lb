@@ -110,7 +110,7 @@ resource "aws_security_group_rule" "load_balancer_443_rule_for_sgs" {
 }
 
 module "alb" {
-  source = "git::ssh://git@github.com/terraform-aws-modules/terraform-aws-alb.git?ref=v5.7.0"
+  source = "git::ssh://git@github.com/terraform-aws-modules/terraform-aws-alb.git?ref=v5.8.0"
 
   name = "${local.env_name}"
 
@@ -140,6 +140,8 @@ module "alb" {
       target_type          = "ip"
       deregistration_delay = 60
       slow_start           = var.task_traffic_slow_start
+
+      load_balancing_algorithm_type = var.load_balancing_algorithm_type
 
       health_check = {
         path    = var.health_check_path
