@@ -1,5 +1,5 @@
 module "fargate_service" {
-  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v3.2.0"
+  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v3.3.0"
 
   name            = var.name
   environment     = var.environment
@@ -19,6 +19,7 @@ module "fargate_service" {
 
   fargate_service_name_override = var.fargate_service_name_override
   health_check_grace_period     = var.health_check_grace_period
+  deployment_maximum_percent    = var.deployment_maximum_percent
 
   load_balancer_config = concat([
     for port in var.container_ports :

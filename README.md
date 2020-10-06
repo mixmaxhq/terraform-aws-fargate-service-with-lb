@@ -199,6 +199,16 @@ Type:
 Default:
 `{}`
 
+#### deployment\_maximum\_percent
+
+Description: The upper limit (as a percentage of the service's desiredCount) of the number of running tasks that can be running in a service during a deployment.
+
+Type:
+`number`
+
+Default:
+`200`
+
 #### extra\_load\_balancer\_configs
 
 Description: Extra load balancer configurations; used when you want one ECS service fronted by multiple load balancers.
