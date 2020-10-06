@@ -189,3 +189,9 @@ variable "load_balancing_algorithm_type" {
     error_message = "The only valid values are 'round_robin' or 'least_outstanding_requests'."
   }
 }
+
+variable "deployment_maximum_percent" {
+  description = "The upper limit (as a percentage of the service's desiredCount) of the number of running tasks that can be running in a service during a deployment."
+  type        = number
+  default     = 200
+}
