@@ -26,8 +26,7 @@ module "web" {
 }
 
 provider "github" {
-  individual = true
-  anonymous  = true
+  version = "~> 4.0"
 }
 
 data "github_ip_ranges" "cidrs" {}
