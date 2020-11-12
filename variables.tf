@@ -173,12 +173,6 @@ variable "capacity_provider_strategies" {
   default = []
 }
 
-variable "anomaly_detection_band_threshold" {
-  description = "This determines how wide the anomaly threshold band is for detecting 5xx errors"
-  default     = 10
-  type        = number
-}
-
 variable "load_balancing_algorithm_type" {
   description = "This variable defines if new requests are routed round_robin or least_outstanding_requests"
   default     = "least_outstanding_requests"
@@ -194,4 +188,10 @@ variable "deployment_maximum_percent" {
   description = "The upper limit (as a percentage of the service's desiredCount) of the number of running tasks that can be running in a service during a deployment."
   type        = number
   default     = 200
+}
+
+variable "high_5xx_responses_threshold" {
+  description = "The count of 5xx responses per second from the configured load balancer that should trigger alarms"
+  type        = number
+  default     = 25
 }

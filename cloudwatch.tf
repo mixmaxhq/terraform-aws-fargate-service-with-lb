@@ -1,38 +1,26 @@
-resource "aws_cloudwatch_metric_alarm" "http_5xx_anomaly_detection" {
-  alarm_name                = "${var.name}-${var.environment}-5xx-anomaly"
-  comparison_operator       = "GreaterThanUpperThreshold"
-  evaluation_periods        = "5"
-  datapoints_to_alarm       = "4"
-  threshold_metric_id       = "e1"
-  alarm_description         = "Count of 5xx HTTP statuses on ${var.name}-${var.environment}'s load balancer are high"
+resource "aws_cloudwatch_metric_alarm" "http_5xx_alarming" {
+  alarm_name          = "${var.name}-${var.environment}-lb-5xx-errors-high"
+  alarm_description   = "Count of 5xx HTTP statuses on ${var.name}-${var.environment}'s load balancer are high"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  metric_name         = "HTTPCode_ELB_5XX_Count"
+  threshold           = var.high_5xx_responses_threshold
+  evaluation_periods  = "5"
+  datapoints_to_alarm = "4"
+  namespace           = "AWS/ApplicationELB"
+  period              = "60"
+  statistic           = "Sum"
+
+  # The HTTPCode_ELB_5XX_Count metric is a counter; when there are no 5XX errors,
+  # it is not represented as a line at zero but the lack of a line. Thus, when
+  # we are missing data, it implies we are not responding with 5xx errors -
+  # we're healthy & the alarm is not breaching.
+  treat_missing_data = "notBreaching"
+
   insufficient_data_actions = []
   alarm_actions             = var.alarm_sns_topic_arns
   ok_actions                = var.alarm_sns_topic_arns
 
-  # Missing data on this metric means that there are no 5xx errors;
-  # therefore, we treat missing data as a good thing.
-  treat_missing_data = "notBreaching"
-
-  metric_query {
-    id          = "e1"
-    expression  = "ANOMALY_DETECTION_BAND(m1, ${var.anomaly_detection_band_threshold})"
-    label       = "5xx Errors (Expected)"
-    return_data = "true"
-  }
-
-  metric_query {
-    id          = "m1"
-    return_data = "true"
-    metric {
-      metric_name = "HTTPCode_ELB_5XX_Count"
-      namespace   = "AWS/ApplicationELB"
-      period      = "60"
-      stat        = "Sum"
-      unit        = "Count"
-
-      dimensions = {
-        LoadBalancer = module.alb.this_lb_arn_suffix
-      }
-    }
+  dimensions = {
+    LoadBalancer = module.alb.this_lb_arn_suffix
   }
 }
