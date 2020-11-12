@@ -96,9 +96,9 @@ variable "alarm_sns_topic_arns" {
 }
 
 variable "task_traffic_slow_start" {
-  description = "This parameter defines the number of seconds during which a newly registered Fargate task receives an increasing share of the traffic to the target group, giving it time to 'warm up'."
+  description = "This parameter defines the number of seconds during which a newly registered Fargate task receives an increasing share of the traffic to the target group, giving it time to 'warm up'. This variable is incompatible with the load balancer `least_outstanding_requests` routing algorithm."
   type        = number
-  default     = 30
+  default     = 0
 }
 
 variable "cpu_high_threshold" {
