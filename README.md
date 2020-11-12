@@ -297,7 +297,7 @@ Type:
 `string`
 
 Default:
-`"round_robin"`
+`"least_outstanding_requests"`
 
 #### max\_capacity
 

@@ -181,7 +181,7 @@ variable "anomaly_detection_band_threshold" {
 
 variable "load_balancing_algorithm_type" {
   description = "This variable defines if new requests are routed round_robin or least_outstanding_requests"
-  default     = "round_robin"
+  default     = "least_outstanding_requests"
   type        = string
 
   validation {
