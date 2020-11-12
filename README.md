@@ -341,13 +341,13 @@ Default:
 
 #### task\_traffic\_slow\_start
 
-Description: This parameter defines the number of seconds during which a newly registered Fargate task receives an increasing share of the traffic to the target group, giving it time to 'warm up'.
+Description: This parameter defines the number of seconds during which a newly registered Fargate task receives an increasing share of the traffic to the target group, giving it time to 'warm up'. This variable is incompatible with the load balancer `least_outstanding_requests` routing algorithm.
 
 Type:
 `number`
 
 Default:
-`30`
+`0`
 
 ## Outputs
 
