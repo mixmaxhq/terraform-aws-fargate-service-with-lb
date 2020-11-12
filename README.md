@@ -99,16 +99,6 @@ Type:
 Default:
 `[]`
 
-#### anomaly\_detection\_band\_threshold
-
-Description: This determines how wide the anomaly threshold band is for detecting 5xx errors
-
-Type:
-`number`
-
-Default:
-`10`
-
 #### capacity\_provider\_strategies
 
 Description: The capacity provider (supported by the configured cluster) to use to provision tasks for the service
@@ -248,6 +238,16 @@ Type:
 
 Default:
 `"/health/elb"`
+
+#### high\_5xx\_responses\_threshold
+
+Description: The count of 5xx responses per second from the configured load balancer that should trigger alarms
+
+Type:
+`number`
+
+Default:
+`25`
 
 #### idle\_timeout
 
