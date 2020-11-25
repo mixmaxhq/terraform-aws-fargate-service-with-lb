@@ -195,3 +195,9 @@ variable "high_5xx_responses_threshold" {
   type        = number
   default     = 25
 }
+
+variable "lb_logs_bucket" {
+  description = "The bucket used to store LB logs"
+  type        = string
+  default     = null
+}

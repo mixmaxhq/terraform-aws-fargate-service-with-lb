@@ -128,8 +128,9 @@ module "alb" {
   listener_ssl_policy_default  = "ELBSecurityPolicy-TLS-1-2-2017-01"
 
   access_logs = {
-    bucket = "mixmax-lb-logs-${var.environment}"
-    prefix = local.env_name
+    enabled = var.lb_logs_bucket != null ? true : false
+    bucket  = var.lb_logs_bucket != null ? "${var.lb_logs_bucket}" : ""
+    prefix  = local.env_name
   }
 
   target_groups = [

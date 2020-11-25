@@ -50,6 +50,13 @@ Description: The environment to deploy into. Some valid values are production, s
 Type:
 `string`
 
+#### lb\_logs\_bucket
+
+Description: The bucket used to store LB logs
+
+Type:
+`string`
+
 #### lb\_subnets
 
 Description: A list of subnet IDs to use for instantiating the load balancer.
