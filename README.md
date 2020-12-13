@@ -37,80 +37,74 @@ terraform-docs md document . >> README.md
 # and then edit out the old stuff
 ```
 
-## Variables
+## Requirements
 
-### Required Variables
+No requirements.
 
-The following variables are required:
+## Providers
 
-#### environment
+The following providers are used by this module:
+
+- aws
+
+## Required Inputs
+
+The following input variables are required:
+
+### environment
 
 Description: The environment to deploy into. Some valid values are production, staging, engineering.
 
-Type:
-`string`
+Type: `string`
 
-#### lb\_logs\_bucket
-
-Description: The bucket used to store LB logs
-
-Type:
-`string`
-
-#### lb\_subnets
+### lb\_subnets
 
 Description: A list of subnet IDs to use for instantiating the load balancer.
 
-Type:
-`list(string)`
+Type: `list(string)`
 
-#### name
+### name
 
 Description: The name of the application to launch
 
-Type:
-`string`
+Type: `string`
 
-#### service
+### service
 
 Description: The name of the service this application is associated with, ie 'send' if the application is 'send-worker'
 
-Type:
-`string`
+Type: `string`
 
-#### service\_subnets
+### service\_subnets
 
 Description: A list of subnet IDs to use for instantiating the Fargate service. Tasks will be deployed into these subnets.
 
-Type:
-`list(string)`
+Type: `list(string)`
 
-#### tls\_cert\_arns
+### tls\_cert\_arns
 
 Description: The ARNs of Amazon Certificate Manager certificates to use with the HTTPS listener on the load balancer. You *must* provide at least one.
 
-Type:
-`list(string)`
+Type: `list(string)`
 
-### Optional Variables
+## Optional Inputs
 
-The following variables are optional (have default values):
+The following input variables are optional (have default values):
 
-#### alarm\_sns\_topic\_arns
+### alarm\_sns\_topic\_arns
 
 Description: This parameter is a list of the SNS topic ARNs. This is used to send alarm notifications. This is REQUIRED for production deployments!
 
-Type:
-`list(string)`
+Type: `list(string)`
 
-Default:
-`[]`
+Default: `[]`
 
-#### capacity\_provider\_strategies
+### capacity\_provider\_strategies
 
 Description: The capacity provider (supported by the configured cluster) to use to provision tasks for the service
 
 Type:
+
 ```hcl
 list(object({
     capacity_provider = string
@@ -119,288 +113,255 @@ list(object({
   }))
 ```
 
-Default:
-`[]`
+Default: `[]`
 
-#### cloudwatch\_evaluation\_periods
+### cloudwatch\_evaluation\_periods
 
 Description: The number of times a metric must exceed thresholds before an alarm triggers. For example, if `period` is set to 60 seconds, and this is set to 2, a given threshold must have been exceeded twice over 120 seconds.
 
-Type:
-`number`
+Type: `number`
 
-Default:
-`1`
+Default: `1`
 
-#### container\_name\_override
+### container\_name\_override
 
 Description: The container name is used for networking the target group to the container instances; set this field to override the container name
 
-Type:
-`string`
+Type: `string`
 
-Default:
-`""`
+Default: `""`
 
-#### container\_ports
+### container\_ports
 
 Description: A list of ports the container listens on. Most Mixmax Docker images 'EXPOSE' port 8080.
 
-Type:
-`list(number)`
+Type: `list(number)`
 
 Default:
+
 ```json
 [
   8080
 ]
 ```
 
-#### cpu\_high\_threshold
+### cpu\_high\_threshold
 
 Description: The CPU percentage to be considered 'high' for autoscaling purposes.
 
-Type:
-`number`
+Type: `number`
 
-Default:
-`70`
+Default: `70`
 
-#### cpu\_low\_threshold
+### cpu\_low\_threshold
 
 Description: The CPU percentage to be considered 'low' for autoscaling purposes. This was set to a 'safe' value to prevent scaling down when it's not a good idea, but please adjust this higher for your app if possible.
 
-Type:
-`number`
+Type: `number`
 
-Default:
-`30`
+Default: `30`
 
-#### cpu\_scaling\_enabled
+### cpu\_scaling\_enabled
 
 Description: Whether CPU-based autoscaling should be turned on or off
 
-Type:
-`bool`
+Type: `bool`
 
-Default:
-`true`
+Default: `true`
 
-#### custom\_tags
+### custom\_tags
 
 Description: A mapping of custom tags to add to the generated resources.
 
-Type:
-`map(string)`
+Type: `map(string)`
 
-Default:
-`{}`
+Default: `{}`
 
-#### deployment\_maximum\_percent
+### deployment\_maximum\_percent
 
 Description: The upper limit (as a percentage of the service's desiredCount) of the number of running tasks that can be running in a service during a deployment.
 
-Type:
-`number`
+Type: `number`
 
-Default:
-`200`
+Default: `200`
 
-#### extra\_load\_balancer\_configs
+### extra\_load\_balancer\_configs
 
 Description: Extra load balancer configurations; used when you want one ECS service fronted by multiple load balancers.
 
-Type:
-`list(object({ target_group_arn = string, container_name = string, container_port = number }))`
+Type: `list(object({ target_group_arn = string, container_name = string, container_port = number }))`
 
-Default:
-`[]`
+Default: `[]`
 
-#### fargate\_service\_name\_override
+### fargate\_service\_name\_override
 
 Description: This parameter allows you to set to the Fargate service name explicitly. This is useful in cases where you need something other than the default {var.name}-{var.environment} naming convention
 
-Type:
-`string`
+Type: `string`
 
-Default:
-`""`
+Default: `""`
 
-#### health\_check\_grace\_period
+### health\_check\_grace\_period
 
 Description: The load balancer health check grace period in seconds. This defines how long ECS will ignore failing load balancer chcecks on newly instantiated tasks.
 
-Type:
-`number`
+Type: `number`
 
-Default:
-`90`
+Default: `90`
 
-#### health\_check\_path
+### health\_check\_path
 
 Description: The path the LB will GET to determine if a host is healthy. For example, /health-check  or /status. This health check should only validate that the app itself is online, not necessarily that any downstream dependent services are also online.
 
-Type:
-`string`
+Type: `string`
 
-Default:
-`"/health/elb"`
+Default: `"/health/elb"`
 
-#### high\_5xx\_responses\_threshold
+### high\_5xx\_responses\_threshold
 
 Description: The count of 5xx responses per second from the configured load balancer that should trigger alarms
 
-Type:
-`number`
+Type: `number`
 
-Default:
-`25`
+Default: `25`
 
-#### idle\_timeout
+### idle\_timeout
 
 Description: The connection idle timeout value for the created load balancer
 
-Type:
-`number`
+Type: `number`
 
-Default:
-`60`
+Default: `60`
 
-#### is\_public
+### is\_public
 
 Description: Whether the service is public or internal only.
 
-Type:
-`bool`
+Type: `bool`
 
-Default:
-`false`
+Default: `false`
 
-#### lb\_allowed\_cidrs
+### lb\_allowed\_cidrs
 
 Description: A list of strings of CIDRs to allow inbound to the load balancer
 
-Type:
-`list(string)`
+Type: `list(string)`
 
-Default:
-`[]`
+Default: `[]`
 
-#### lb\_allowed\_sgs
+### lb\_allowed\_sgs
 
 Description: A list of strings of Security Group IDs to allow inbound to the load balancer.
 
-Type:
-`list(string)`
+Type: `list(string)`
 
-Default:
-`[]`
+Default: `[]`
 
-#### load\_balancing\_algorithm\_type
+### lb\_logs\_bucket
 
-Description: This variable defines if new requests are routed round_robin or least_outstanding_requests
+Description: The bucket used to store LB logs
 
-Type:
-`string`
+Type: `string`
 
-Default:
-`"least_outstanding_requests"`
+Default: `null`
 
-#### max\_capacity
+### load\_balancing\_algorithm\_type
+
+Description: This variable defines if new requests are routed round\_robin or least\_outstanding\_requests
+
+Type: `string`
+
+Default: `"least_outstanding_requests"`
+
+### max\_capacity
 
 Description: The maximum capacity for a scaling Fargate service.
 
-Type:
-`number`
+Type: `number`
 
-Default:
-`8`
+Default: `8`
 
-#### min\_capacity
+### min\_capacity
 
 Description: The minimum capacity for a scaling Fargate service.
 
-Type:
-`number`
+Type: `number`
 
-Default:
-`2`
+Default: `2`
 
-#### set\_public\_sg\_rule
+### set\_public\_sg\_rule
 
 Description: Whether to set the public security group rule allowing all access. This is only used on public load balancers and is useful to set to 'false' if you want to create an internet-facing load balancer that only accepts traffic from certain sources, ie Github -> Jenkins but nothing else over the public internet.
 
-Type:
-`bool`
+Type: `bool`
 
-Default:
-`true`
+Default: `true`
 
-#### task\_definition
+### task\_definition
 
 Description: The task definition family:revision or full ARN to deploy on first run to the Fargate service. If you are deploying software with Jenkins, you can ignore this; this is used with task definitions that are managed in Terraform. If unset, the first run will use an Nginx 'hello-world' task def. Terraform will not update the task definition in the service if this value has changed.
 
-Type:
-`string`
+Type: `string`
 
-Default:
-`""`
+Default: `""`
 
-#### task\_traffic\_slow\_start
+### task\_traffic\_slow\_start
 
 Description: This parameter defines the number of seconds during which a newly registered Fargate task receives an increasing share of the traffic to the target group, giving it time to 'warm up'. This variable is incompatible with the load balancer `least_outstanding_requests` routing algorithm.
 
-Type:
-`number`
+Type: `number`
 
-Default:
-`0`
+Default: `0`
 
 ## Outputs
 
 The following outputs are exported:
 
-#### alb\_arn
+### alb\_arn
 
 Description: The ARN of the created ALB
 
-#### alb\_dns\_name
+### alb\_dns\_name
 
 Description: The DNS name of the created ALB. Useful for creating a CNAME from mixmax.com DNS names.
 
-#### alb\_listener\_arn
+### alb\_listener\_arn
 
 Description: The ARN of the HTTPS ALB listener
 
-#### cloudwatch\_log\_group\_name
+### cloudwatch\_log\_group\_name
 
 Description: The name of the CloudWatch log group
 
-#### lb\_arn\_suffix
+### lb\_arn\_suffix
 
 Description: The ARN suffix of the application load balancer. Useful for Cloudwatch alarms
 
-#### lb\_sg\_id
+### lb\_sg\_id
 
 Description: The ID of the Security Group attached to the LB
 
-#### task\_role\_arn
+### task\_role\_arn
 
 Description: The ARN of the IAM Role created for the Fargate service
 
-#### task\_role\_name
+### task\_role\_name
 
 Description: The name of the IAM Role created for the Fargate service
 
-#### task\_sg\_id
+### task\_sg\_id
 
 Description: The ID of the Security Group attached to the ECS tasks
 
-#### tg\_arn
+### tg\_arn
 
 Description: The ARN of the target group in the application load balancer.
 
-#### tg\_arn\_suffix
+### tg\_arn\_suffix
 
 Description: The ARN suffixes of the target group in the application load balancer. Useful for Cloudwatch alarms
+
+### zone\_id
+
+Description: The Zone ID that the ALB resides in. Useful for creating Route53 records with failover behaviour.
 

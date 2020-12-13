@@ -23,6 +23,11 @@ output "alb_dns_name" {
   value       = module.alb.this_lb_dns_name
 }
 
+output "zone_id" {
+  description = "The Zone ID that the ALB resides in. Useful for creating Route53 records with failover behaviour."
+  value       = module.alb.this_lb_zone_id
+}
+
 output "alb_arn" {
   description = "The ARN of the created ALB"
   value       = module.alb.this_lb_arn
