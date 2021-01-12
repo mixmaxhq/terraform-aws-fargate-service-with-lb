@@ -126,6 +126,7 @@ module "alb" {
   load_balancer_create_timeout = "20m"
   load_balancer_update_timeout = "20m"
   listener_ssl_policy_default  = "ELBSecurityPolicy-TLS-1-2-2017-01"
+  drop_invalid_header_fields   = true
 
   access_logs = {
     enabled = var.lb_logs_bucket != null ? true : false
