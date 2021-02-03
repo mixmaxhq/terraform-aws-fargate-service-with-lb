@@ -1,5 +1,5 @@
 module "fargate_service" {
-  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v3.3.0"
+  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v4.0.0"
 
   name            = var.name
   environment     = var.environment
@@ -111,9 +111,9 @@ resource "aws_security_group_rule" "load_balancer_443_rule_for_sgs" {
 }
 
 module "alb" {
-  source = "git::ssh://git@github.com/terraform-aws-modules/terraform-aws-alb.git?ref=v5.8.0"
+  source = "git::ssh://git@github.com/terraform-aws-modules/terraform-aws-alb.git?ref=v5.10.0"
 
-  name = "${local.env_name}"
+  name = local.env_name
 
   load_balancer_type = "application"
 
@@ -130,7 +130,7 @@ module "alb" {
 
   access_logs = {
     enabled = var.lb_logs_bucket != null ? true : false
-    bucket  = var.lb_logs_bucket != null ? "${var.lb_logs_bucket}" : ""
+    bucket  = var.lb_logs_bucket != null ? var.lb_logs_bucket : ""
     prefix  = local.env_name
   }
 
