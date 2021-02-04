@@ -1,7 +1,3 @@
-terraform {
-  experiments = [variable_validation]
-}
-
 variable "name" {
   description = "The name of the application to launch"
   type        = string
