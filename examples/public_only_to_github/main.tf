@@ -41,7 +41,7 @@ resource "aws_security_group_rule" "only_github_webhooks" {
 }
 
 module "fargate_bootstrap_task_definition" {
-  source                   = "git@github.com:mixmaxhq/terraform-aws-ecs-task-definition?ref=v1.2.2"
+  source                   = "git@github.com:mongodb/terraform-aws-ecs-task-definition?ref=v2.1.5"
   family                   = "fargate-bootstrap-${var.environment}"
   name                     = "fargate-bootstrap-${var.environment}"
   cpu                      = 256
