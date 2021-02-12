@@ -1,5 +1,5 @@
 module "fargate_service" {
-  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v4.1.0"
+  source = "git::ssh://git@github.com/mixmaxhq/terraform-aws-fargate-service.git?ref=v4.1.1"
 
   name            = var.name
   environment     = var.environment
