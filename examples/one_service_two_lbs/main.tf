@@ -57,7 +57,7 @@ module "alb" {
   load_balancer_update_timeout = "20m"
 
   access_logs = {
-    bucket = "mixmax-lb-logs-${var.environment}"
+    bucket = "more-logs-pls-${var.environment}"
     prefix = "${var.name}-${var.environment}"
   }
 

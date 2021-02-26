@@ -1,14 +1,14 @@
 # `terraform-aws-fargate-service-with-lb`
 
-This module is an opinionated implementation of a Fargate service with an application load balancer, serving HTTP requests. This is useful for creating an API or web service.
+This module is an opinionated implementation of a Fargate service with an application load balancer, serving HTTP requests. This is useful for creating an API or web service. It contains autoscaling off CPU load, health checking, alerting for when the service isn't healthy, and neatly tags everything along the way. Security groups are wired up with principal of least privilege access to resources.
 
-It fronts all traffic with HTTPS on port 443, forwarding to the configured `container_ports` (default is 80.) This module outputs the ALB DNS name, which can be used to create a CNAME record in Route 53.
+It fronts all traffic with HTTPS on port 443, forwarding to the configured `container_ports` (default is 80.) This module outputs the ALB DNS name, which can be used to create a CNAME record in Route 53. Port 80 serves a permenant redirect to 443.
 
 For creating a Fargate service without a built-in application load balancer, see the [terraform-aws-fargate-service module](https://github.com/mixmaxhq/terraform-aws-fargate-service). This is also useful when deploying an application behind a Network Load Balancer.
 
 ## Usage
 
-An example deployable application can be found in the [examples/simple](examples/simple) directory.
+Example deployable applications can be found in the [examples/](examples/) directory.
 
 ## Notes
 
@@ -27,7 +27,7 @@ Error: InvalidParameterException: The container module-test-staging does not exi
   28: resource "aws_ecs_service" "service" {
 ```
 
-This is due to this module making some assumptions about the name of the container to [connect networking for the load balancer](https://github.com/mixmaxhq/terraform-aws-fargate-service-with-lb/blob/master/main.tf#L14). The default is set to `${var.name}-${var.environment}` when deploying a task definition using the `mixmax` CLI. However, you can override this behavior. Find the `name` value in your task definition's [container definition](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html#container_definition_name), and set the `container_name_override` parameter to this module for overriding the name used.
+This is due to this module making some assumptions about the name of the container to [connect networking for the load balancer](https://github.com/mixmaxhq/terraform-aws-fargate-service-with-lb/blob/master/main.tf#L14). The default is set to `${var.name}-${var.environment}` when deploying a task definition using Mixmax's tooling. However, you can override this behavior. Find the `name` value in your task definition's [container definition](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html#container_definition_name), and set the `container_name_override` parameter to this module for overriding the name used.
 
 ## How are the docs generated?
 
@@ -323,7 +323,7 @@ Description: The ARN of the created ALB
 
 ### alb\_dns\_name
 
-Description: The DNS name of the created ALB. Useful for creating a CNAME from mixmax.com DNS names.
+Description: The DNS name of the created ALB. Used to create a CNAME in your local zone to point to the created load balancer.
 
 ### alb\_listener\_arn
 
