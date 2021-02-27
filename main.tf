@@ -54,14 +54,23 @@ resource "aws_security_group" "lb" {
   description = "Security group for ${local.env_name} load balancer"
   vpc_id      = local.vpc_id
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags = merge(local.tags, { "Name" : "${local.env_name}-lb-sg" })
+}
+
+# Load balancer egress to all ports listed in var.container_ports
+resource "aws_security_group_rule" "lb_egress" {
+  count = length(var.container_ports)
+
+  # This isn't terribly idiomatic, but since this is an egress rule
+  # the "source" SG is the remote security group; `security_group_id`
+  # is where we tell Terraform what SG we'll be applying the rule to.
+  security_group_id        = aws_security_group.lb.id
+  source_security_group_id = module.fargate_service.task_sg_id
+
+  type      = "egress"
+  from_port = var.container_ports[count.index]
+  to_port   = var.container_ports[count.index]
+  protocol  = "tcp"
 }
 
 resource "aws_security_group_rule" "public_load_balancer_80_rule" {
