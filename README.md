@@ -2,7 +2,7 @@
 
 This module is an opinionated implementation of a Fargate service with an application load balancer, serving HTTP requests. This is useful for creating an API or web service. It contains autoscaling off CPU load, health checking, alerting for when the service isn't healthy, and neatly tags everything along the way. Security groups are wired up with principal of least privilege access to resources.
 
-It fronts all traffic with HTTPS on port 443, forwarding to the configured `container_ports` (default is 80.) This module outputs the ALB DNS name, which can be used to create a CNAME record in Route 53. Port 80 serves a permenant redirect to 443.
+It fronts all traffic with HTTPS on port 443, forwarding to the configured `container_ports` (default is 80.) This module outputs the ALB DNS name, which can be used to create a CNAME record in Route 53. Port 80 serves a permanent redirect to 443.
 
 For creating a Fargate service without a built-in application load balancer, see the [terraform-aws-fargate-service module](https://github.com/mixmaxhq/terraform-aws-fargate-service). This is also useful when deploying an application behind a Network Load Balancer.
 
