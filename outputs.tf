@@ -19,7 +19,7 @@ output "lb_sg_id" {
 }
 
 output "alb_dns_name" {
-  description = "The DNS name of the created ALB. Useful for creating a CNAME from mixmax.com DNS names."
+  description = "The DNS name of the created ALB. Used to create a CNAME in your local zone to point to the created load balancer."
   value       = module.alb.this_lb_dns_name
 }
 

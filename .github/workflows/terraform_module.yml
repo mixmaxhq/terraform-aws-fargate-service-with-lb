@@ -1,0 +1,92 @@
+name: 'Terraform'
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+
+jobs:
+  lint:
+    name: 'Terraform module linting'
+    runs-on: ubuntu-latest
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 0.14.5
+
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # Checks that all Terraform configuration files adhere to a canonical format
+    - name: terraform fmt
+      run: terraform fmt -check
+
+    # Lint with tflint. This action recursively lints all subdirectories by default.
+    - name: tflint
+      uses: devops-infra/action-tflint@master
+
+  test:
+    name: 'Terraform module example testing & validation'
+    runs-on: ubuntu-latest
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    # Here we define each example to test/validate
+    strategy:
+      matrix:
+        example_dir: ['examples/simple', 'examples/one_service_two_lbs', 'examples/public_only_to_github']
+
+    steps:
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 0.14.5
+
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # Checks that all Terraform configuration files adhere to a canonical format
+    - name: terraform fmt
+      run: terraform fmt -check ${{ matrix.example_dir }}
+
+    # Set up SSH key to check out private modules for full static validation
+    - name: Set up SSH key to check out private modules
+      uses: webfactory/ssh-agent@v0.4.1
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    # Generates an execution plan for Terraform
+    - name: Statically validate simple example
+      run: terraform init ${{ matrix.example_dir }} && terraform validate ${{ matrix.example_dir }}
+
+  security:
+    name: 'Terraform module security scanning workflow'
+    runs-on: ubuntu-latest
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    # Validate configuration with tfsec (https://github.com/tfsec/tfsec#use-as-github-action)
+    steps:
+    - name: Terraform security scan
+      uses: triat/terraform-security-scan@v2.1.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tfsec_version: v0.39.3
+
