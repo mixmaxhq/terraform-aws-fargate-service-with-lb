@@ -84,9 +84,7 @@ jobs:
     # Validate configuration with tfsec (https://github.com/tfsec/tfsec#use-as-github-action)
     steps:
     - name: Terraform security scan
-      uses: triat/terraform-security-scan@v2.1.0
+      uses: triat/terraform-security-scan@v2.2.3
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tfsec_version: v0.39.3
 
