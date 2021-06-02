@@ -26,7 +26,6 @@ module "web" {
 }
 
 provider "github" {
-  version = "~> 4.0"
 }
 
 data "github_ip_ranges" "cidrs" {}
